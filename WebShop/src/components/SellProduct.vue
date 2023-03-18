@@ -5,7 +5,8 @@
       <form>
         <div>
           <label for="item-image">Upload an Image:</label>
-          <input type="file" id="item-image" name="item-image">
+          <input type="file" @change="onFileChange" />
+          <img v-if="imageUrl" id="item-image" :src="imageUrl" />
         </div>
         <div>
           <label for="item-description">Product Description:</label>
@@ -13,7 +14,7 @@
         </div>
         <div>
           <label for="item-price">Price:</label>
-          <input type="text" id="item-price" name="item-price">
+          <input type="text" id="item-price" name="item-price" />
         </div>
         <button type="submit">Sell Item</button>
       </form>
@@ -25,16 +26,45 @@
 export default {
   data() {
     return {
-      // data properties here
+      imageUrl: null,
+      imageFile: null,
     }
   },
   methods: {
-    // methods here
-  }
+    onFileChange(event) {
+      const file = event.target.files[0]
+      this.imageFile = file
+      this.imageUrl = URL.createObjectURL(file)
+    },
+  },
+  beforeUnmount() {
+    if (this.imageUrl) {
+      URL.revokeObjectURL(this.imageUrl)
+    }
+  },
 }
 </script>
 
 <style scoped>
+button[type="submit"] {
+  background-color: var(--button-green-hover);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--button-green);
+}
+
+
+#item-image{
+  width: 50%;
+}
 .sell-item-container {
   display: flex;
   flex-direction: column;
@@ -69,7 +99,7 @@ textarea {
 }
 
 button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 0.5rem;
   border: none;
