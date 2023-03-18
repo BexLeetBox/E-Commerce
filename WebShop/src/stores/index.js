@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 
 export default new Vuex.Store({
   state: {
-    IsloggedIn: false
+    IsloggedIn: true
   },
   mutations: {
     loggedIn(state) {

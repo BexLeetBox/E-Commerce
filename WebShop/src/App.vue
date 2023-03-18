@@ -1,7 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { useStore } from 'vuex'
-import { computed } from 'vue'
 </script>
 
 <template>
@@ -18,7 +16,6 @@ import { computed } from 'vue'
     <div class="topnav">
       <RouterLink to="/" exact class="active">Home</RouterLink>
       <div id="myLinks">
-        <RouterLink to="/products">My account</RouterLink>
         <RouterLink to="/cart">My cart</RouterLink>
         <RouterLink to="/sell">Sell</RouterLink>
         <RouterLink to="/about">About us</RouterLink>
@@ -58,10 +55,7 @@ export default {
       return store.getters.getLoggedInStatus ? 'My Account' : 'Login'
     })
 
-    console.log(loginLink);
-    console.log(loginText);
-
-    console.log(store.getters.getLoggedInStatus)
+    console.log("Logged in status = "+store.getters.getLoggedInStatus)
 
     this.loginLink = loginLink;
     this.loginText = loginText;
