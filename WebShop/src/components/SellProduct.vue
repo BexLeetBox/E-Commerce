@@ -2,7 +2,7 @@
   <main>
     <div class="sell-item-container">
       <h1>Sell an Item</h1>
-      <form>
+      <form @submit.prevent="submitForm">
         <div>
           <label for="item-image">Upload an Image:</label>
           <input type="file" @change="onFileChange" />
@@ -10,11 +10,11 @@
         </div>
         <div>
           <label for="item-description">Product Description:</label>
-          <textarea id="item-description" name="item-description"></textarea>
+          <textarea id="item-description" name="item-description" v-model="description"></textarea>
         </div>
         <div>
           <label for="item-price">Price:</label>
-          <input type="text" id="item-price" name="item-price" />
+          <input type="text" id="item-price" name="item-price" v-model="price" />
         </div>
         <button type="submit">Sell Item</button>
       </form>
@@ -23,11 +23,15 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
       imageUrl: null,
       imageFile: null,
+      description: '',
+      price: ''
     }
   },
   methods: {
@@ -36,17 +40,32 @@ export default {
       this.imageFile = file
       this.imageUrl = URL.createObjectURL(file)
     },
+    async submitForm() {
+      const formData = new FormData()
+      formData.append('image', this.imageFile)
+      formData.append('description', this.description)
+      formData.append('price', this.price)
+
+      try {
+        const response = await axios.post('/sell-item', formData)
+        console.log(response.data)
+        // do something with response data, like showing a success message or redirecting to another page
+      } catch (error) {
+        console.log(error)
+        // handle error, like showing an error message
+      }
+    },
   },
   beforeUnmount() {
     if (this.imageUrl) {
       URL.revokeObjectURL(this.imageUrl)
     }
-  },
+  }
 }
 </script>
 
 <style scoped>
-button[type="submit"] {
+button[type='submit'] {
   background-color: var(--button-green-hover);
   color: white;
   font-size: 1.2rem;
@@ -57,12 +76,11 @@ button[type="submit"] {
   transition: background-color 0.2s ease-in-out;
 }
 
-button[type="submit"]:hover {
+button[type='submit']:hover {
   background-color: var(--button-green);
 }
 
-
-#item-image{
+#item-image {
   width: 50%;
 }
 .sell-item-container {
