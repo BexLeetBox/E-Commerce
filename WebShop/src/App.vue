@@ -17,7 +17,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/" exact class="active">Home</RouterLink>
       <div id="myLinks">
         <RouterLink to="/cart">My cart</RouterLink>
-        <RouterLink to="/sell">Sell</RouterLink>
+        <RouterLink :to="sellLink">Sell</RouterLink>
         <RouterLink to="/about">About us</RouterLink>
         <RouterLink :to="loginLink" id="loginButton">{{ loginText }}</RouterLink>
       </div>
@@ -39,11 +39,16 @@ export default {
     return {
       count: 0,
       loginLink: '/login',
-      loginText: 'Login'
+      loginText: 'Login',
+      sellLink: "",
     }
   },
   mounted() {
     const store = useStore()
+
+    const sellLink = computed(() => {
+      return store.getters.getLoggedInStatus ? '/sell' : '/login'
+    })
 
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
@@ -59,6 +64,7 @@ export default {
 
     this.loginLink = loginLink;
     this.loginText = loginText;
+    this.sellLink = sellLink
   },
   methods: {
     incrementCount() {
