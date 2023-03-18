@@ -1,85 +1,95 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <div id="logodiv">
+      <img id="logo" src="./assets/logo.svg" alt="" />
+      <h1>WebShop</h1>
     </div>
+    
   </header>
-
+  <div class="mobile-container">
+    <div class="topnav">
+      <RouterLink to="/" exact class="active">Home</RouterLink>
+      <div id="myLinks">
+        <RouterLink to="/products">Products</RouterLink>
+        <RouterLink to="/cart">My cart</RouterLink>
+        <RouterLink to="/sell">Sell</RouterLink>
+        <RouterLink to="/about">About us</RouterLink>
+      </div>
+      <a href="javascript:void(0);" class="icon" @click="menuDr()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
   <RouterView />
 </template>
-
+<script>
+function menuDr() {
+  var x = document.getElementById('myLinks')
+  if (x.style.display === 'block') {
+    x.style.display = 'none'
+  } else {
+    x.style.display = 'block'
+  }
+}
+</script>
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+#logodiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
+#logo{
+  max-width: 50px;
   text-align: center;
-  margin-top: 2rem;
+}
+.mobile-container {
+  max-width: 480px;
+  margin: auto;
+  background-color: #555;
+  color: white;
+  border-radius: 10px;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  position: relative;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.topnav #myLinks {
+  display: none;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
 }
 
-nav a:first-of-type {
-  border: 0;
+.topnav a.icon {
+  background: black;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
 }
+
+.active {
+  background-color: #04aa6d;
+  color: white;
+}
+
+
 </style>
