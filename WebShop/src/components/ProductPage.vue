@@ -1,14 +1,15 @@
 <template>
-    <div class="product-list">
-      <div v-for="product in products" :key="product.id" class="product">
-        <img :src="product.imageUrl" :alt="product.name" />
-        <div class="details">
-          <h2>{{ product.name }}</h2>
-          <p>{{ product.description }}</p>
-          <p class="price">{{ product.price }}</p>
+    <div class="product-container">
+        <div v-for="product in products" :key="product.id" class="product-item">
+          <img :src="product.imageUrl" :alt="product.name" class="product-image" />
+          <div class="product-details">
+            <h2>{{ product.name }}</h2>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">{{ product.price }}</p>
+          </div>
         </div>
       </div>
-    </div>
+      
 </template>
   
 <script>
@@ -34,6 +35,20 @@ export default {
         },
         {
           id: 3,
+          name: "Product 3",
+          description: "This is a description of product 3",
+          price: 29.99,
+          imageUrl: "https://dummyimage.com/300x300/000/fff"
+        },
+        {
+          id: 4,
+          name: "Product 2",
+          description: "This is a description of product 2",
+          price: 19.99,
+          imageUrl: "https://dummyimage.com/300x300/000/fff"
+        },
+        {
+          id: 5,
           name: "Product 3",
           description: "This is a description of product 3",
           price: 29.99,
@@ -67,7 +82,7 @@ export default {
     padding: 10px;
   }
   .product-image {
-    width: 100%;
+    width: 70%;
     height: auto;
   }
   .product-description {
@@ -85,11 +100,35 @@ export default {
   /* Tablet and desktop styles */
   @media screen and (min-width: 768px) {
     .product-container {
-      justify-content: flex-start;
-    }
-    .product-item {
-      width: calc(33.33% - 20px);
-      margin: 10px;
-    }
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+        gap: 20px;
+        justify-items: center;
+      }
+      .product-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        text-align: center;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 20px 20px 10px rgba(0,0,0,0.1);
+      }
+      .product-image {
+        width: 100%;
+        height: auto;
+      }
+      .product-description {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.2;
+      }
+      .product-price {
+        margin-top: 5px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    
   }
 </style>

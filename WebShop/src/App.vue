@@ -110,6 +110,7 @@ export default {
   background-color: #333;
   position: relative;
   border-radius: 0px;
+  margin-bottom: 20px;
 }
 
 .topnav #myLinks {
