@@ -1,5 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 </script>
 
 <template>
@@ -20,7 +22,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/cart">My cart</RouterLink>
         <RouterLink to="/sell">Sell</RouterLink>
         <RouterLink to="/about">About us</RouterLink>
-        <RouterLink to="/login" id="loginButton">Login</RouterLink>
+        <RouterLink :to="loginLink" id="loginButton">{{ loginText }}</RouterLink>
       </div>
 
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
@@ -31,12 +33,51 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterView />
 </template>
 <script>
-function menuDr() {
-  var x = document.getElementById('myLinks')
-  if (x.style.display === 'block') {
-    x.style.display = 'none'
-  } else {
-    x.style.display = 'block'
+import store from '@/stores/index.js'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+
+export default {
+  data() {
+    return {
+      count: 0,
+      loginLink: '/login',
+      loginText: 'Login'
+    }
+  },
+  mounted() {
+    const store = useStore()
+
+    // Computed property that returns the correct link based on the isLoggedIn state
+    const loginLink = computed(() => {
+      return store.getters.getLoggedInStatus ? '/myaccount' : '/login'
+    })
+
+    // Computed property that returns the correct text based on the isLoggedIn state
+    const loginText = computed(() => {
+      return store.getters.getLoggedInStatus ? 'My Account' : 'Login'
+    })
+
+    console.log(loginLink);
+    console.log(loginText);
+
+    console.log(store.getters.getLoggedInStatus)
+
+    this.loginLink = loginLink;
+    this.loginText = loginText;
+  },
+  methods: {
+    incrementCount() {
+      store.dispatch('increment')
+    },
+    menuDr() {
+      var x = document.getElementById('myLinks')
+      if (x.style.display === 'block') {
+        x.style.display = 'none'
+      } else {
+        x.style.display = 'block'
+      }
+    }
   }
 }
 </script>
@@ -103,7 +144,7 @@ function menuDr() {
 
 @media screen and (min-width: 700px) {
   #loginButton {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     position: absolute;
     right: 0;
     padding: 14px 16px;
