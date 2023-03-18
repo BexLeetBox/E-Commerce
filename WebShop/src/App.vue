@@ -4,21 +4,25 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <div id="logodiv">
       <img id="logo" src="./assets/logo.svg" alt="" />
     </div>
-    
   </header>
   <div class="mobile-container">
     <div class="topnav">
       <RouterLink to="/" exact class="active">Home</RouterLink>
       <div id="myLinks">
-        <RouterLink to="/products">Products</RouterLink>
+        <RouterLink to="/products">My account</RouterLink>
         <RouterLink to="/cart">My cart</RouterLink>
         <RouterLink to="/sell">Sell</RouterLink>
         <RouterLink to="/about">About us</RouterLink>
+        <RouterLink to="/login" id="loginButton">Login</RouterLink>
       </div>
+
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
         <i class="fa fa-bars"></i>
       </a>
@@ -37,8 +41,8 @@ function menuDr() {
 }
 </script>
 <style scoped>
-*{
-    font-family: 'Open Sans', sans-serif;
+* {
+  font-family: 'Open Sans', sans-serif;
 }
 
 #logodiv {
@@ -46,19 +50,18 @@ function menuDr() {
   justify-content: center;
   align-items: center;
 }
-#logo{
+#logo {
   max-width: 150px;
   text-align: center;
 }
 .mobile-container {
-  max-width: 520px;
+  max-width: 700px;
   margin: auto;
   background-color: #555;
 
   color: white;
   border-radius: 10px;
 }
-
 
 .topnav {
   overflow: hidden;
@@ -80,7 +83,6 @@ function menuDr() {
 }
 
 .topnav a.icon {
-
   display: none;
   background: black;
   display: block;
@@ -99,16 +101,28 @@ function menuDr() {
   color: white;
 }
 
-@media screen and (min-width: 520px) {
-*{
-  margin: 10px;
-  text-align: center;
-}
-#logo{
-  max-width: 200px;
-  text-align: center;
-}
-  .topnav{
+@media screen and (min-width: 700px) {
+  #loginButton {
+    background-color: #4CAF50;
+    position: absolute;
+    right: 0;
+    padding: 14px 16px;
+    box-shadow: 2px 2px 5px rgba(37, 2, 2, 0.5);
+    color: white;
+    border-radius: 5px;
+  }
+  #loginButton:hover {
+    background-color: #04aa6d;
+  }
+  * {
+    margin: 10px;
+    text-align: center;
+  }
+  #logo {
+    max-width: 200px;
+    text-align: center;
+  }
+  .topnav {
     display: block;
     border-radius: 0px;
   }
@@ -116,7 +130,7 @@ function menuDr() {
     display: inline-block;
     padding: 14px 10px;
   }
-  
+
   .mobile-container {
     max-width: 100%;
     margin: auto;
