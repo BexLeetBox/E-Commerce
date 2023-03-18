@@ -78,6 +78,7 @@ export default {
 <style scoped>
 * {
   font-family: 'Open Sans', sans-serif;
+  text-align: center;
 }
 
 #logodiv {
