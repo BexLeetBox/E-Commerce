@@ -1,12 +1,14 @@
-package ntnu.idatt2105.WebShop.model;
+package ntnu.idatt2105.webshop.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.*;
+
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "User")
+@Table(name = "User")
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -17,6 +19,11 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String address;
+    @OneToOne(mappedBy="user")
+    private Cart cart;
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
+
 
 
     public User(String username, String password) {
@@ -53,5 +60,19 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
+        product.setSeller(this);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.setSeller(null);
     }
 }

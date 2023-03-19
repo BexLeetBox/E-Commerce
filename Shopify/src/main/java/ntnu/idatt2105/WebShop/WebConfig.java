@@ -1,4 +1,4 @@
-package ntnu.idatt2105.WebShop;
+package ntnu.idatt2105.webshop;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

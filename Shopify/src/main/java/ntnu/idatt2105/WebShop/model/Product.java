@@ -1,8 +1,9 @@
-package ntnu.idatt2105.WebShop.model;
+package ntnu.idatt2105.webshop.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "Product")
+@Table(name = "Product")
 public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -13,10 +14,14 @@ public class Product {
     private double latitude, longitude;
     private double price;
     private String image;
+
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User seller;
 
-
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude, double price, String image) {
         this.briefDescription = briefDescription;
@@ -26,6 +31,10 @@ public class Product {
         this.longitude = longitude;
         this.price = price;
         this.image = image;
+    }
+
+    public Product() {
+
     }
 
     public Long getId() {

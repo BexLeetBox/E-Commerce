@@ -1,23 +1,19 @@
-package ntnu.idatt2105.WebShop.controller;
+package ntnu.idatt2105.webshop.controller;
 
 
-import ntnu.idatt2105.WebShop.model.Cart;
-import ntnu.idatt2105.WebShop.model.Product;
-import ntnu.idatt2105.WebShop.model.User;
-import ntnu.idatt2105.WebShop.repositories.CartRepository;
-import ntnu.idatt2105.WebShop.repositories.ProductRepository;
-import ntnu.idatt2105.WebShop.repositories.UserRepository;
+import ntnu.idatt2105.webshop.model.Product;
+import ntnu.idatt2105.webshop.model.User;
+import ntnu.idatt2105.webshop.repositories.CartRepository;
+import ntnu.idatt2105.webshop.repositories.ProductRepository;
+import ntnu.idatt2105.webshop.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +24,13 @@ public class RestApiController {
 
     Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
-    @Autowired
-    private ProductRepository productRepository;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @CrossOrigin()
