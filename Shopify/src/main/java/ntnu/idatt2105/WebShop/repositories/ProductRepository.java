@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
-    ArrayList<Product> findProductsByUser(User user);
+    ArrayList<Product> findProductsBySeller(User seller);
 }
