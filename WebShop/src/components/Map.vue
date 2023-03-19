@@ -1,8 +1,15 @@
 <template>
     <GMapMap
         :center="center"
-        :zoom="7"
-        map-type-id="terrain"
+        :zoom="12"
+        :options="{
+                        zoomControl: true,
+                        mapTypeControl: false,
+                        scaleControl: false,
+                        streetViewControl: false,
+                        rotateControl: false,
+                        fullscreenControl: false,
+        }"
         style="width: 500px; height: 300px"
     >
       <GMapCluster>
@@ -21,7 +28,10 @@
   export default {
     data() {
       return {
-        center: {lat: 51.093048, lng: 6.842120},
+        center: {lat: 63.4255, lng: 10.3951},
+        options: {
+            mapId: '1e8c8a920e03249a'
+        },
         markers: [
           {
             position: {
