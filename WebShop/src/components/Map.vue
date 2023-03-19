@@ -28,7 +28,7 @@
   export default {
     data() {
       return {
-        center: {lat: 63.4255, lng: 10.3951},
+        center: {lat: 63.4255, lng: 10.3952},
         options: {
             mapId: '1e8c8a920e03249a'
         },
