@@ -1,30 +1,32 @@
-
 import Vuex from 'vuex'
-
 
 export default new Vuex.Store({
   state: {
-    IsloggedIn: false
+    isLoggedIn: false,
+    currentPage: '/sell', 
   },
   mutations: {
-    loggedIn(state) {
-      state.IsloggedIn = true;
+    setLoginStatus(state, status) {
+      state.isLoggedIn = status;
     },
-    loggedOut(state){
-        state.IsloggedIn = false;
-    }
+    setCurrentPage(state, page) {
+      state.currentPage = page;
+    },
   },
   actions: {
-    loggedIn(context) {
-      context.commit('loggedIn')
+    setLoginStatus({commit}, status) {
+      commit('setLoginStatus', status)
     },
-    loggedOut(context) {
-        context.commit('loggedOut')
-      }
+    setCurrentPage({commit}, page) {
+      commit('setCurrentPage', page)
+    },
   },
   getters: {
-    getLoggedInStatus(state) {
-      return state.IsloggedIn
+    getLoginStatus(state) {
+      return state.isLoggedIn
+    },
+    getCurrentPage(state) {
+      return state.currentPage;
     }
   }
 })
