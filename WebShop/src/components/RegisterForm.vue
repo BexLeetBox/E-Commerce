@@ -101,7 +101,6 @@
   #username,
   #password {
     display: block; /* added */
-    
   }
 input,
   .inputField {
