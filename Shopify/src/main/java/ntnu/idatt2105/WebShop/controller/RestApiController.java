@@ -33,8 +33,8 @@ public class RestApiController {
 
     @CrossOrigin()
     @RequestMapping(value="/sell-item", method=RequestMethod.POST)
-    public Map<String, String> process(@RequestBody Map <String, Object> req,@RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
-
+    public Map<String, String> process(@RequestBody Map <String, Object> req,@RequestParam("file") MultipartFile file,
+                                       Authentication authentication) throws IOException {
 
                 Map<String, String> returnObject = new HashMap<>();
                 authentication.getName();
@@ -47,7 +47,14 @@ public class RestApiController {
 
                 return returnObject;
             }
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/products", method=RequestMethod.GET)
+    public List<Product> process(Authentication authentication) throws IOException {
 
+        ArrayList<Product> products = new ArrayList<>();
+        productRepository.findAll().forEach(products::add);
+            return products;
+    }
 
            /** else{
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Client is not properly authenticated");

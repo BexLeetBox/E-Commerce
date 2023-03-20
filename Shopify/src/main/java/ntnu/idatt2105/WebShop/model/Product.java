@@ -1,6 +1,6 @@
 package ntnu.idatt2105.webshop.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity(name = "Product")
 @Table(name = "Product")
