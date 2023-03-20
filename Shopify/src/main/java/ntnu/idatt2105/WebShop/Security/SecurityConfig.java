@@ -18,14 +18,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        http
-                .csrf().disable()
+                http.csrf().disable()
                 .cors().and()
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/token").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/user").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/calc").permitAll()
                 .antMatchers(HttpMethod.GET, "/history").permitAll()
                 .anyRequest().authenticated();

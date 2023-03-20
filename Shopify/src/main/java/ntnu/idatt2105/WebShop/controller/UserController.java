@@ -109,7 +109,7 @@ public class UserController {
         public ResponseEntity<User> login(@RequestParam("username") String username,
                                           @RequestParam("password") String password)
                 throws NoSuchAlgorithmException, InvalidKeySpecException {
-
+            logger.info("User username", username);
             User user = userRepository.findByUsername(username);
             if (user == null) {
                 logger.info("User with username {} not found", username);
