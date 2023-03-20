@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin()
 @RestController
@@ -85,21 +83,16 @@ public class RestApiController {
         returnObject.put("answer", "Not authorized");
         return returnObject;
     }
-
+    */
     @CrossOrigin
-    @RequestMapping(value = "/history", method=RequestMethod.GET)
-    public ArrayList<String> getHistory(Authentication authentication){
+    @RequestMapping(value = "/products", method=RequestMethod.GET)
+    public List<Product> getProducts(Authentication authentication){
         if (authentication != null || true) {
-            User user = userRepository.findByUsername(authentication.getName());
-            logger.info("Sending all calculations by: "+user.getUsername());
-            ArrayList<Calculation> arr= calculationRepository.findCalculationsByUser(user);
-            ArrayList<String> strings = new ArrayList<>();
-            for(Calculation calc: arr){
-                strings.add(calc.getCalculation());
-            }
-            return strings;
+            ArrayList<Product> products = new ArrayList<>();
+            productRepository.findAll().forEach(products::add);
+            return products;
         } else {
             return null;
         }
-    }*/
+    }
 }
