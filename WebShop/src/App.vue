@@ -14,12 +14,12 @@ import { RouterLink, RouterView } from 'vue-router'
   </header>
   <div class="mobile-container">
     <div class="topnav">
-      <RouterLink to="/" exact class="active">Home</RouterLink>
+      <RouterLink to="/" exact :exact-active-class="'active'">Home</RouterLink>
       <div id="myLinks">
-        <RouterLink to="/cart">My cart</RouterLink>
-        <RouterLink :to="sellLink">Sell</RouterLink>
-        <RouterLink to="/about">About us</RouterLink>
-        <RouterLink :to="loginLink" id="loginButton">{{ loginText }}</RouterLink>
+        <RouterLink to="/cart" exact :exact-active-class="'active'">My cart</RouterLink>
+        <RouterLink :to="sellLink" exact :exact-active-class="'active'">Sell</RouterLink>
+        <RouterLink to="/about" exact :exact-active-class="'active'">About us</RouterLink>
+        <RouterLink :to="loginLink" id="loginButton" exact :exact-active-class="'active'">{{ loginText }}</RouterLink>
       </div>
 
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
