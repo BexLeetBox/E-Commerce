@@ -36,12 +36,33 @@ public class UserController {
         UserRepository userRepository;
         Logger logger = LoggerFactory.getLogger(TokenController.class);
 
+        @CrossOrigin
+        @PostMapping(value = "/token")
+        @ResponseStatus(value = HttpStatus.CREATED)
+        public ResponseEntity<Map<String, String>> generateToken(@RequestParam("username") final String username, @RequestParam("password") final String password) throws Exception {
+
+            User user = userRepository.findByUsername(username);
+            if (user != null) {
+                if (user.getUsername().equals(username) && PasswordHashing.validatePassword(password,user.getPassword())) {
+                    logger.info("/token Got user: " + username);
+                    String token = generateToken(username);
+                    Map<String, String> response = new HashMap<>();
+                    response.put("token", token);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                }
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Wrong Password"));
+            }
+            logger.info("User was not found");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied, wrong credentials...."));
+        }
+
         /**
          * Generates a JWT token for the user with the specified user ID.
          *
          * @param userId the ID of the user to generate the token for
          * @return the JWT token string
          */
+
         public String generateToken(String userId) {
             // Generate the key for signing the token
             Key key = Keys.hmacShaKeyFor(keyStr.getBytes(StandardCharsets.UTF_8));
@@ -69,30 +90,7 @@ public class UserController {
         }
 
 
-        /**
-         * Creates a new user with the specified username and password and saves it to the database.
-         *
-         * @param username the username of the new user
-         * @param password the password of the new user
-         * @return a ResponseEntity containing the created user if successful, or an error response if not
-         */
-        @CrossOrigin
-        @PostMapping("/register")
-        @ResponseStatus(value = HttpStatus.CREATED)
-        public ResponseEntity<User> createUser(@RequestParam("username") String username,
-                                               @RequestParam("password") String password) {
-            logger.info("Creating user: username={}, password=****", username);
 
-            try {
-                String hashedPassword = PasswordHashing.generatePasswordHash(password);
-                User user = userRepository.save(new User(username, hashedPassword));
-                logger.info("User created: id={}, username={}", user.getId(), user.getUsername());
-                return ResponseEntity.status(HttpStatus.CREATED).body(user);
-            } catch (Exception e) {
-                logger.error("Failed to create user: username={}", username, e);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
 
         /**
          * Logs in a user with the specified username and password, if the credentials are correct.
