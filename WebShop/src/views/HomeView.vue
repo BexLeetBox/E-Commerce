@@ -9,3 +9,9 @@ import Map from '../components/MapControls.vue';
     <Map></Map>
   </main>
 </template>
+<style scoped>
+.map-wrapper {
+  display: flex;
+  justify-content: center;
+}
+</style>
