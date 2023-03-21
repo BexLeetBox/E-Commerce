@@ -2,7 +2,7 @@ package ntnu.idatt2105.webshop.Security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import ntnu.idatt2105.webshop.controller.UserController;
+import ntnu.idatt2105.webshop.controller.RestApiController;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +40,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         // try to extract JWT from the header
         try {
             // generate key from the key string
-            Key key = Keys.hmacShaKeyFor(UserController.TokenController.keyStr.getBytes("UTF-8"));
+            Key key = Keys.hmacShaKeyFor(RestApiController.keyStr.getBytes("UTF-8"));
 
             // retrieve the authorization header
             String authenticationHeader = request.getHeader(HEADER);

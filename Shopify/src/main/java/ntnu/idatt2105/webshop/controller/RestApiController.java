@@ -29,8 +29,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ntnu.idatt2105.webshop.controller.UserController.TokenController.keyStr;
-
 @CrossOrigin()
 @RestController
 public class RestApiController {
@@ -56,12 +54,13 @@ public class RestApiController {
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> createUser(@RequestParam("username") String username,
-                                           @RequestParam("password") String password) {
+                                           @RequestParam("password") String password,
+                                           @RequestParam("email") String email) {
         logger.info("Creating user: username={}, password=****", username);
 
         try {
             String hashedPassword = PasswordHashing.generatePasswordHash(password);
-            User user = userRepository.save(new User(username, hashedPassword));
+            User user = userRepository.save(new User(username, hashedPassword, email));
             logger.info("User created: id={}, username={}", user.getId(), user.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (Exception e) {

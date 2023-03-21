@@ -3,7 +3,6 @@ package ntnu.idatt2105.webshop.model;
 import javax.persistence.*;
 
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,12 +13,15 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
+    @Column(unique = true)
+    private String email;
     @OneToOne(mappedBy="user")
     private Cart cart;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -27,9 +29,10 @@ public class User {
 
 
 
-    public User(String username, String password) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     protected User() {
