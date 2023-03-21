@@ -47,10 +47,10 @@ public class RestApiController {
 
                 return returnObject;
             }
+
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/products", method=RequestMethod.GET)
-    public List<Product> process(Authentication authentication) throws IOException {
-
+    public List<Product> process() throws IOException {
         ArrayList<Product> products = new ArrayList<>();
         productRepository.findAll().forEach(products::add);
             return products;
@@ -91,15 +91,4 @@ public class RestApiController {
         return returnObject;
     }
     */
-    @CrossOrigin
-    @RequestMapping(value = "/products", method=RequestMethod.GET)
-    public List<Product> getProducts(Authentication authentication){
-        if (authentication != null || true) {
-            ArrayList<Product> products = new ArrayList<>();
-            productRepository.findAll().forEach(products::add);
-            return products;
-        } else {
-            return null;
-        }
-    }
 }

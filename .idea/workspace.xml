@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="d544c7d0-8366-46ab-9134-75d3f5dd64bd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/Security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/controller/RestApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/controller/RestApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/src/main/java/ntnu/idatt2105/WebShop/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebShop/src/components/ProductPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/WebShop/src/components/ProductPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebShop/src/components/RegisterForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/WebShop/src/components/RegisterForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebShop/src/service/ApiService.js" beforeDir="false" afterPath="$PROJECT_DIR$/WebShop/src/service/ApiService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,19 +27,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/marsh/Documents/GitHub/E-Commerce/Shopify",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/marsh/Documents/GitHub/E-Commerce/Shopify&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\OneDrive\OneDrive - NTNU\NTNU\2 år\Fullstack application develoment\PROSJEKT\E-Commerce" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Shopify" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Shopify" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -43,6 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1679092041312</updated>
       <workItem from="1679092042774" duration="97000" />
+      <workItem from="1679402155856" duration="70000" />
     </task>
     <servers />
   </component>

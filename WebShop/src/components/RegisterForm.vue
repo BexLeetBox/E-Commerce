@@ -57,7 +57,7 @@
             response.username === user.username &&
             response.password === user.password
           ) {
-            this.registrationStatus = "Succsefully registered";
+            this.registrationStatus = "Succesfully registered";
           } else this.registrationStatus = "User already registered";
         } else this.registrationStatus = "Please fill out the registration";
       },

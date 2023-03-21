@@ -76,7 +76,7 @@ public class UserController {
          * @param password the password of the new user
          * @return a ResponseEntity containing the created user if successful, or an error response if not
          */
-        @CrossOrigin
+        @CrossOrigin(origins = "http://localhost:8001")
         @PostMapping("/register")
         @ResponseStatus(value = HttpStatus.CREATED)
         public ResponseEntity<User> createUser(@RequestParam("username") String username,
