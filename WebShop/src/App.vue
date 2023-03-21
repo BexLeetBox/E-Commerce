@@ -19,7 +19,9 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/cart" exact :exact-active-class="'active'">My cart</RouterLink>
         <RouterLink :to="sellLink" exact :exact-active-class="'active'">Sell</RouterLink>
         <RouterLink to="/about" exact :exact-active-class="'active'">About us</RouterLink>
-        <RouterLink :to="loginLink" id="loginButton" exact :exact-active-class="'active'">{{ loginText }}</RouterLink>
+        <RouterLink :to="loginLink" id="loginButton" exact :exact-active-class="'active'">{{
+          loginText
+        }}</RouterLink>
       </div>
 
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
@@ -30,8 +32,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterView />
 </template>
 <script>
-import store from '@/stores/index.js'
-import { useStore } from 'vuex'
+import store from '../src/stores/index'
+
 import { computed } from 'vue'
 
 export default {
@@ -40,30 +42,29 @@ export default {
       count: 0,
       loginLink: '/login',
       loginText: 'Login',
-      sellLink: "",
+      sellLink: '/login'
     }
   },
   mounted() {
-    const store = useStore()
 
     const sellLink = computed(() => {
-      return store.getters.getLoggedInStatus ? '/sell' : '/login'
+      return store.getters.getLogInStatus ? '/sell' : '/login'
     })
-
+    console.log(store.getters.getLogInStatus)
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
-      return store.getters.getLoggedInStatus ? '/myaccount' : '/login'
+      return store.getters.getLogInStatus ? '/myaccount' : '/login'
     })
 
     // Computed property that returns the correct text based on the isLoggedIn state
     const loginText = computed(() => {
-      return store.getters.getLoggedInStatus ? 'My Account' : 'Login'
+      return store.getters.getLogInStatus ? 'My Account' : 'Login'
     })
 
-    console.log("Logged in status = "+store.getters.getLoggedInStatus)
+    console.log('Logged in status = ' + store.getters.getLoginStatus)
 
-    this.loginLink = loginLink;
-    this.loginText = loginText;
+    this.loginLink = loginLink
+    this.loginText = loginText
     this.sellLink = sellLink
   },
   methods: {

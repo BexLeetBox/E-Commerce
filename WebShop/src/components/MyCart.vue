@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('https://example.com/mycart')
+    axios.get('http://localhost:8001/mycart')
       .then(response => {
         this.products = response.data
       })

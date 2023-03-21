@@ -31,8 +31,8 @@
   </template>
   
   <script>
-  import store from "@/stores";
-  import router from "@/router";
+  import store from "@/stores/index.js";
+  import router from "@/router/index.js";
   export default {
     name: "LoginComponent",
     methods: {
@@ -54,7 +54,7 @@
         } else {
           this.loginStatus = "Logged in";
           store.commit("SET_LOGINSTATUS", true);
-          await router.push(store.getters.getCurrentPage);
+          await router.push("/");
           console.log(store.getters.getLoginStatus);
           console.log("Logged in");
         }

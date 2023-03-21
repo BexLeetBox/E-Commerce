@@ -18,7 +18,7 @@ export default {
   },
   getUser(user) {
     return apiClient
-      .post("/user", null, {
+      .post("/login", null, {
         params: {
           username: user.username,
           password: user.password,
@@ -49,6 +49,7 @@ export default {
         params: {
           username: user.username,
           password: user.password,
+          email: user.email,
         },
       })
       .then((response) => {
