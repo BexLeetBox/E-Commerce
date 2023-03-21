@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('https://example.com/products')
+    axios.get('http://localhost:8001/products')
       .then(response => {
         this.products = response.data
       })
