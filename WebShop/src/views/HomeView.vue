@@ -1,6 +1,6 @@
 <script setup>
 import TheWelcome from '../components/ProductPage.vue'
-import Map from '../components/MapControls.vue';
+import Map from '../components/MapProducts.vue';
 </script>
 
 <template>

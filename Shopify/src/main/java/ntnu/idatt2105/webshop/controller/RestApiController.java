@@ -73,17 +73,17 @@ public class RestApiController {
     public Map<String, String> process(@RequestBody Map <String, Object> req,@RequestParam("file") MultipartFile file,
                                        Authentication authentication) throws IOException {
 
-                Map<String, String> returnObject = new HashMap<>();
-                authentication.getName();
-                User user = userRepository.findByUsername(authentication.getName());
-                String image = Base64.getEncoder().encodeToString(file.getBytes());
-                Product product = new Product((String) req.get("briefDescription"), (String) req.get("fullDescription"), (String) req.get("category"),
-                        (Double) req.get("latitude"), (Double) req.get("longitude"), (Double) req.get("price"), image);
-                logger.info("Sending cart of user "+user.getUsername());
-                productRepository.save(product);
+        Map<String, String> returnObject = new HashMap<>();
+        authentication.getName();
+        User user = userRepository.findByUsername(authentication.getName());
+        String image = Base64.getEncoder().encodeToString(file.getBytes());
+        Product product = new Product((String) req.get("briefDescription"), (String) req.get("fullDescription"), (String) req.get("category"),
+                (Double) req.get("latitude"), (Double) req.get("longitude"), (Double) req.get("price"), image);
+        logger.info("Sending cart of user "+user.getUsername());
+        productRepository.save(product);
 
-                return returnObject;
-            }
+        return returnObject;
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)

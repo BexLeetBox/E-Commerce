@@ -16,6 +16,7 @@
           <label for="item-price">Price:</label>
           <input type="text" id="item-price" name="item-price" v-model="price" />
         </div>
+        <Map></Map>
         <button type="submit">Sell Item</button>
       </form>
     </div>
@@ -23,6 +24,8 @@
 </template>
 
 <script>
+import Map from "./MapSellItem.vue";
+
 import axios from 'axios'
 
 export default {
