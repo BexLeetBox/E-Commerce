@@ -4,6 +4,9 @@ package ntnu.idatt2105.webshop.controller;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import ntnu.idatt2105.webshop.model.Product;
 import ntnu.idatt2105.webshop.model.User;
 import ntnu.idatt2105.webshop.repositories.CartRepository;
@@ -43,13 +46,11 @@ public class RestApiController {
     @Autowired
     private ProductRepository productRepository;
 
-    /**
-     * Creates a new user with the specified username and password and saves it to the database.
-     *
-     * @param username the username of the new user
-     * @param password the password of the new user
-     * @return a ResponseEntity containing the created user if successful, or an error response if not
-     */
+    @ApiOperation(value = "Create a new user", response = User.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully created user"),
+            @ApiResponse(code = 500, message = "Failed to create user")
+    })
     @CrossOrigin
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -68,6 +69,12 @@ public class RestApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @ApiOperation(value = "Sell a new product", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully sold product"),
+            @ApiResponse(code = 500, message = "Failed to sell product")
+    })
     @CrossOrigin()
     @RequestMapping(value="/sell-item", method=RequestMethod.POST)
     public Map<String, String> process(@RequestBody Map <String, Object> req,@RequestParam("file") MultipartFile file,
@@ -85,6 +92,11 @@ public class RestApiController {
         return returnObject;
     }
 
+    @ApiOperation(value = "Get all products", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved products"),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
     public List<Product> getProducts(Authentication authentication){
@@ -97,6 +109,11 @@ public class RestApiController {
         }
     }
 
+    @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully generated token"),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @CrossOrigin
     @PostMapping(value = "/token")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -150,15 +167,11 @@ public class RestApiController {
                 .compact();
     }
 
-    /**
-     * Logs in a user with the specified username and password, if the credentials are correct.
-     *
-     * @param username the username of the user to log in
-     * @param password the password of the user to log in
-     * @return a ResponseEntity containing the logged-in user if successful, or an error response if not
-     * @throws NoSuchAlgorithmException if the specified cryptographic algorithm is not available
-     * @throws InvalidKeySpecException if the provided key specification is inappropriate for the given algorithm
-     */
+    @ApiOperation(value = "Log in a user", response = User.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully logged in"),
+            @ApiResponse(code = 500, message = "Failed to log in")
+    })
     @CrossOrigin
     @PostMapping("/login")
     @ResponseStatus(value = HttpStatus.CREATED)
