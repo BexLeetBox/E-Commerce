@@ -76,20 +76,33 @@ public class RestApiController {
             @ApiResponse(code = 500, message = "Failed to sell product")
     })
     @CrossOrigin()
-    @RequestMapping(value="/sell-item", method=RequestMethod.POST)
-    public Map<String, String> process(@RequestBody Map <String, Object> req,@RequestParam("file") MultipartFile file,
-                                       Authentication authentication) throws IOException {
+    @PostMapping(value="/sell-item", consumes = {"multipart/form-data"})
+    public ResponseEntity<Map<String, String>> processSellItem(
+            @RequestParam("briefDescription") String briefDescription,
+            @RequestParam("fullDescription") String fullDescription,
+            @RequestParam("category") String category,
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("price") Double price,
+            @RequestParam("image") MultipartFile image,
+            Authentication authentication) {
 
-        Map<String, String> returnObject = new HashMap<>();
-        authentication.getName();
         User user = userRepository.findByUsername(authentication.getName());
-        String image = Base64.getEncoder().encodeToString(file.getBytes());
-        Product product = new Product((String) req.get("briefDescription"), (String) req.get("fullDescription"), (String) req.get("category"),
-                (Double) req.get("latitude"), (Double) req.get("longitude"), (Double) req.get("price"), image);
-        logger.info("Sending cart of user "+user.getUsername());
-        productRepository.save(product);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
+        }
 
-        return returnObject;
+        try {
+            //String imageString = Base64.getEncoder().encodeToString(image.getBytes());
+            byte[] imageBytes = image.getBytes();
+            Product product = new Product(briefDescription, fullDescription, category, latitude, longitude, price,
+                    imageBytes);
+            productRepository.save(product);
+            return ResponseEntity.ok(Collections.singletonMap("success", "Item listed successfully"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Failed to process image"));
+        }
     }
 
     @ApiOperation(value = "Get all products", response = List.class)

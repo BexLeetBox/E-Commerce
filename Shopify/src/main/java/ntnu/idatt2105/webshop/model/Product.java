@@ -13,7 +13,12 @@ public class Product {
     private String category;
     private double latitude, longitude;
     private double price;
-    private String image;
+
+    @Lob
+    @Column(name = "image", columnDefinition="BLOB")
+    private byte[] image;
+
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,7 +28,8 @@ public class Product {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude, double price, String image) {
+    public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude,
+                   double price, byte[] image) {
         this.briefDescription = briefDescription;
         this.fullDescription = fullDescription;
         this.category = category;
@@ -93,11 +99,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

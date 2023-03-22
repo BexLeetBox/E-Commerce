@@ -2,29 +2,34 @@
   <main>
     <div class="sell-item-container">
       <h1>Sell an Item</h1>
-      <form @submit.prevent="submitForm">
-        <div>
-          <label for="item-image">Upload an Image:</label>
-          <input type="file" @change="onFileChange" />
-          <img v-if="imageUrl" id="item-image" :src="imageUrl" />
-        </div>
-        <div>
-          <label for="item-description">Product Description:</label>
-          <textarea id="item-description" name="item-description" v-model="description"></textarea>
-        </div>
-        <div>
-          <label for="item-price">Price:</label>
-          <input type="text" id="item-price" name="item-price" v-model="price" />
-        </div>
-        <Map></Map>
-        <button type="submit">Sell Item</button>
+      <form
+        id="product-form"
+        method="post"
+        enctype="multipart/form-data"
+        @submit.prevent="submitForm"
+      >
+        <label for="brief-description">Brief Description:</label>
+        <input type="text" id="brief-description" name="briefDescription" /><br /><br />
+        <label for="full-description">Full Description:</label>
+        <input type="text" id="full-description" name="fullDescription" /><br /><br />
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" /><br /><br />
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" /><br /><br />
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" /><br /><br />
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" /><br /><br />
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" @change="onFileChange" /><br /><br />
+        <input type="submit" value="Submit" />
       </form>
     </div>
   </main>
 </template>
 
 <script>
-import Map from "./MapSellItem.vue";
+import Map from './MapSellItem.vue'
 
 import axios from 'axios'
 
@@ -34,7 +39,12 @@ export default {
       imageUrl: null,
       imageFile: null,
       description: '',
-      price: ''
+      price: '',
+      config: {
+        headers: {
+          Authorization: 'Bearer ' + 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJBU0QiLCJ1c2VySWQiOiJBU0QiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjc5NDkzOTU2LCJleHAiOjE2ODAwOTM5NTZ9.6A1gEW_aNMOzCBIfzSgazUYIm_K5aLkxFxZ985ilo4bkkJ23Vh0YmMHcF2e60uyT'//this.$store.getters.getToken
+        }
+      }
     }
   },
   methods: {
@@ -45,17 +55,19 @@ export default {
     },
     async submitForm() {
       const formData = new FormData()
+      formData.append('briefDescription', document.getElementById('brief-description').value)
+      formData.append('fullDescription', document.getElementById('full-description').value)
+      formData.append('category', document.getElementById('category').value)
+      formData.append('latitude', parseFloat(document.getElementById('latitude').value))
+      formData.append('longitude', parseFloat(document.getElementById('longitude').value))
+      formData.append('price', parseFloat(document.getElementById('price').value))
       formData.append('image', this.imageFile)
-      formData.append('description', this.description)
-      formData.append('price', this.price)
 
       try {
-        const response = await axios.post('/sell-item', formData)
+        const response = await axios.post('http://localhost:8001/sell-item', formData, this.config)
         console.log(response.data)
-        // do something with response data, like showing a success message or redirecting to another page
       } catch (error) {
-        console.log(error)
-        // handle error, like showing an error message
+        console.error(error)
       }
     },
   },
