@@ -58,7 +58,12 @@ export default {
     }
   }, methods: {
     getImage(imageData) {
+      try {
       return "data:image/jpeg;base64," + atob(imageData);
+    } catch (e) {
+      console.error(e);
+      return "default-image-url";
+    }
     }
   },
   mounted() {
