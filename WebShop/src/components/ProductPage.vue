@@ -1,10 +1,10 @@
 <template>
     <div class="product-container">
         <div v-for="product in products" :key="product.id" class="product-item">
-          <img :src="product.imageUrl" :alt="product.name" class="product-image" />
+          <img :src="getImage(product.image)" :alt="product.name" class="product-image" />
           <div class="product-details">
-            <h2>{{ product.name }}</h2>
-            <p class="product-description">{{ product.description }}</p>
+            <h2>{{ product.briefDescription }}</h2>
+            <p class="product-description">{{ product.fullDescription }}</p>
             <p class="product-price">{{ product.price }}</p>
           </div>
         </div>
@@ -55,6 +55,10 @@ export default {
           imageUrl: "https://dummyimage.com/300x300/000/fff"
         }
       ]
+    }
+  }, methods: {
+    getImage(imageData) {
+      return "data:image/jpeg;base64," + atob(imageData);
     }
   },
   mounted() {

@@ -114,8 +114,18 @@ public class RestApiController {
     @RequestMapping(value = "/products", method=RequestMethod.GET)
     public List<Product> getProducts(Authentication authentication){
         if (authentication != null || true) {
-            ArrayList<Product> products = new ArrayList<>();
-            productRepository.findAll().forEach(products::add);
+            List<Product> products = new ArrayList<>();
+            productRepository.findAll().forEach(product -> {
+                Product p = new Product();
+                p.setId(product.getId());
+                p.setBriefDescription(product.getBriefDescription());
+                p.setFullDescription(product.getFullDescription());
+                p.setPrice(product.getPrice());
+                byte[] imageBytes = product.getImage();
+                String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+                p.setImage(encodedImage.getBytes());
+                products.add(p);
+            });
             return products;
         } else {
             return null;
