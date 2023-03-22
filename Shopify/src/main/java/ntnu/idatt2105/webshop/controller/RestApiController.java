@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import ntnu.idatt2105.webshop.dto.ProductDTO;
 import ntnu.idatt2105.webshop.model.Product;
 import ntnu.idatt2105.webshop.model.User;
 import ntnu.idatt2105.webshop.repositories.CartRepository;
@@ -93,10 +94,10 @@ public class RestApiController {
         }
 
         try {
-            //String imageString = Base64.getEncoder().encodeToString(image.getBytes());
+
             byte[] imageBytes = image.getBytes();
             Product product = new Product(briefDescription, fullDescription, category, latitude, longitude, price,
-                    imageBytes);
+                    imageBytes, user);
             productRepository.save(product);
             return ResponseEntity.ok(Collections.singletonMap("success", "Item listed successfully"));
         } catch (IOException e) {
@@ -112,21 +113,18 @@ public class RestApiController {
     })
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
-    public List<Product> getProducts(Authentication authentication){
+    public List<ProductDTO> getProducts(Authentication authentication){
         if (authentication != null || true) {
-            List<Product> products = new ArrayList<>();
-            productRepository.findAll().forEach(product -> {
-                Product p = new Product();
-                p.setId(product.getId());
-                p.setBriefDescription(product.getBriefDescription());
-                p.setFullDescription(product.getFullDescription());
-                p.setPrice(product.getPrice());
-                byte[] imageBytes = product.getImage();
-                String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-                p.setImage(encodedImage.getBytes());
-                products.add(p);
-            });
-            return products;
+            Iterable<Product> products = productRepository.findAll();
+            List<ProductDTO> productDTOs = new ArrayList<>();
+            for (Product product : products) {
+                ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
+                        product.getFullDescription(), product.getCategory(), product.getLatitude(),
+                        product.getLongitude(), product.getPrice(), product.getImage(),
+                        product.getSeller().getUsername());
+                productDTOs.add(productDTO);
+            }
+            return productDTOs;
         } else {
             return null;
         }

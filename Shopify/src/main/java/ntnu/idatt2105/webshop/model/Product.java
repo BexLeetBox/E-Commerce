@@ -29,7 +29,7 @@ public class Product {
     private Cart cart;
 
     public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude,
-                   double price, byte[] image) {
+                   double price, byte[] image, User user) {
         this.briefDescription = briefDescription;
         this.fullDescription = fullDescription;
         this.category = category;
@@ -37,6 +37,7 @@ public class Product {
         this.longitude = longitude;
         this.price = price;
         this.image = image;
+        this.seller = user;
     }
 
     public Product() {
