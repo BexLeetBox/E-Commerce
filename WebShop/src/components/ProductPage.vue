@@ -1,4 +1,13 @@
 <template>
+  <div class="sidebar">
+    <h3>Filter by Category</h3>
+    <ul>
+      <li v-for="category in categories" :key="category.id">
+        <input type="checkbox" :value="category.id" v-model="selectedCategories" @change="filterProducts" />
+        <label>{{ category.name }}</label>
+      </li>
+    </ul>
+  </div>
   <div class="product-container">
     <div v-for="product in products" :key="product.id" class="product-item">
       <img :src="getImage(product.image)" :alt="product.name" class="product-image" />
@@ -22,7 +31,16 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      products: []
+      products: [],
+      categories: [
+      { id: 1, name: 'Furniture', selected: false },
+      { id: 2, name: 'Clothing', selected: false },
+      { id: 3, name: 'Electronics', selected: false },
+      { id: 4, name: 'Vehicles', selected: false },
+      { id: 5, name: 'Other', selected: false },
+      // ...
+    ],
+      selectedCategories: [],
     }
   },
   methods: {
@@ -78,6 +96,21 @@ export default {
 
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {
+
+  .sidebar ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .sidebar li {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .sidebar input[type="checkbox"] {
+    margin-right: 5px;
+  }
   .product-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
