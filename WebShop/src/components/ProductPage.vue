@@ -3,7 +3,12 @@
     <h3>Filter by Category</h3>
     <ul>
       <li v-for="category in categories" :key="category.id">
-        <input type="checkbox" :value="category.id" v-model="selectedCategories" @change="filterProducts" />
+        <input
+          type="checkbox"
+          :value="category.id"
+          v-model="selectedCategories"
+          @change="filterProducts"
+        />
         <label>{{ category.name }}</label>
       </li>
     </ul>
@@ -19,7 +24,8 @@
         <label for="seller-name">Seller:</label>
         <p class="product-description">{{ product.sellerName }}</p>
         <label for="price">Price:</label>
-        <p class="product-price">{{ product.price + " NOK."}}</p>
+        <p class="product-price">{{ product.price + ' NOK.' }}</p>
+        <button @click="addToCart(product)">Add to cart</button>
       </div>
     </div>
   </div>
@@ -33,17 +39,25 @@ export default {
     return {
       products: [],
       categories: [
-      { id: 1, name: 'Furniture', selected: false },
-      { id: 2, name: 'Clothing', selected: false },
-      { id: 3, name: 'Electronics', selected: false },
-      { id: 4, name: 'Vehicles', selected: false },
-      { id: 5, name: 'Other', selected: false },
-      // ...
-    ],
-      selectedCategories: [],
+        { id: 1, name: 'Furniture', selected: false },
+        { id: 2, name: 'Clothing', selected: false },
+        { id: 3, name: 'Electronics', selected: false },
+        { id: 4, name: 'Vehicles', selected: false },
+        { id: 5, name: 'Other', selected: false }
+        // ...
+      ],
+      selectedCategories: []
     }
   },
   methods: {
+    filterProducts() {
+      this.selectedCategories = this.categories
+        .filter((category) => category.selected)
+        .map((category) => category.id)
+
+      // Perform filtering logic here using this.selectedCategories
+      // ...
+    },
     getImage(imageData) {
       try {
         return `data:image/jpeg;base64,${imageData}`
@@ -67,6 +81,21 @@ export default {
 </script>
 
 <style scoped>
+
+button{
+  background-color: var(--button-green-hover);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--button-green);
+}
 /* Mobile styles */
 .product-container {
   display: flex;
@@ -96,19 +125,21 @@ export default {
 
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {
-
+  button {
+    margin-top: 10px;
+  }
   .sidebar ul {
     padding: 0;
     margin: 0;
     list-style: none;
   }
-  
+
   .sidebar li {
     display: inline-block;
     margin-right: 10px;
   }
-  
-  .sidebar input[type="checkbox"] {
+
+  .sidebar input[type='checkbox'] {
     margin-right: 5px;
   }
   .product-container {
@@ -128,8 +159,8 @@ export default {
     box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.1);
   }
   .product-image {
-    width: 100%;
-    height: auto;
+    width: 300px;
+    height: 250px;
   }
   .product-description {
     margin-top: 10px;
