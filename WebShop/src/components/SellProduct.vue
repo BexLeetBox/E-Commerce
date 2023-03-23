@@ -51,10 +51,9 @@ export default {
       this.imageUrl = URL.createObjectURL(file)
       this.config = {
       headers: {
-        Authorization: 'Bearer ' + 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJiIiwidXNlcklkIjoiYiIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2Nzk1Mjg5MjUsImV4cCI6MTY4MDEyODkyNX0.g7pM7wr2itgHvCGrIQs-xTjSmEJMKRFkennxUqxVDq3fjBGP-2J-BRGSHoYEZz3Q'
+        Authorization: 'Bearer ' + localStorage.getItem('token')
       }
     }
-      console.log(store.getters.getToken)
     },
     async submitForm() {
       const formData = new FormData()
@@ -66,6 +65,7 @@ export default {
       formData.append('price', parseFloat(document.getElementById('price').value))
       formData.append('image', this.imageFile)
 
+      console.log(localStorage.getItem('token'))
       try {
         const response = await axios.post('http://localhost:8001/sell-item', formData, this.config)
         console.log('token' + this.$store.getters.getToken)
