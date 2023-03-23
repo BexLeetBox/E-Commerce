@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import ntnu.idatt2105.webshop.dto.ProductDTO;
+import ntnu.idatt2105.webshop.model.Cart;
 import ntnu.idatt2105.webshop.model.Product;
 import ntnu.idatt2105.webshop.model.User;
 import ntnu.idatt2105.webshop.repositories.CartRepository;
@@ -106,6 +107,28 @@ public class RestApiController {
         }
     }
 
+
+
+    @CrossOrigin()
+    @PostMapping(value="/addToCart")
+    public ResponseEntity<Map<String, String>> addToCart(
+            @RequestParam("briefDescription") String briefDescription,
+            @RequestParam("fullDescription") String fullDescription,
+            @RequestParam("category") String category,
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("price") Double price,
+            Authentication authentication) {
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
+        }
+
+      return null;
+    }
+
+
     @ApiOperation(value = "Get all products", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved products"),
@@ -129,6 +152,7 @@ public class RestApiController {
             return null;
         }
     }
+
 
     @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
     @ApiResponses(value = {

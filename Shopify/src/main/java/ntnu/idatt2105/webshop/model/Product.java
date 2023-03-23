@@ -17,20 +17,18 @@ public class Product {
     private double price;
 
     @Lob
-    @Column(name = "image", columnDefinition="LONG BLOB")
+    @Column(name = "image", columnDefinition="LONGBLOB")
     private byte[] image;
 
 
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User seller;
 
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonIgnore
     private Cart cart;
 
     public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude,
