@@ -37,8 +37,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // try to extract JWT from the header
-        try {
             // generate key from the key string
             Key key = Keys.hmacShaKeyFor(RestApiController.keyStr.getBytes("UTF-8"));
 
@@ -76,12 +74,5 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
             // continue with the filter chain
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
-            // return a forbidden status and send an error message
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-            return;
-        }
-
     }
 }

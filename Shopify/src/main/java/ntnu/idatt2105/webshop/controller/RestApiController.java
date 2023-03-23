@@ -212,7 +212,14 @@ public class RestApiController {
         }
 
         logger.info("User with username {} successfully logged in", username);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        } catch (Exception e) {
+            logger.error("Error serializing response body", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
 
 }

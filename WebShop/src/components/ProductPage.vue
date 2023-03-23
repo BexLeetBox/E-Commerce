@@ -28,8 +28,6 @@ export default {
   methods: {
     getImage(imageData) {
       try {
-        console.log(imageData)
-       
         return `data:image/jpeg;base64,${imageData}`
       } catch (e) {
         console.error(e)

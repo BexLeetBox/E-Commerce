@@ -92,6 +92,7 @@ export default createStore({
     },
     async fetchUserName({ commit }, user) {
       const token = await ApiService.getToken(user)
+      console.log(token);
       const gottenUser = await ApiService.getUser(user)
       console.log(gottenUser)
       if (token) {

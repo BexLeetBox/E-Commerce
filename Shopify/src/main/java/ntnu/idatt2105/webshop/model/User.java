@@ -1,5 +1,7 @@
 package ntnu.idatt2105.webshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 
@@ -21,8 +23,10 @@ public class User {
     @Column(unique = true)
     private String email;
     @OneToOne(mappedBy="user")
+    @JsonIgnore
     private Cart cart;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -31,6 +35,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
 

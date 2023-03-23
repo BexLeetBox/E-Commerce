@@ -1,5 +1,7 @@
 package ntnu.idatt2105.webshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity(name = "Product")
@@ -15,17 +17,20 @@ public class Product {
     private double price;
 
     @Lob
-    @Column(name = "image", columnDefinition="BLOB")
+    @Column(name = "image", columnDefinition="LONG BLOB")
     private byte[] image;
 
 
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User seller;
+
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
 
     public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude,

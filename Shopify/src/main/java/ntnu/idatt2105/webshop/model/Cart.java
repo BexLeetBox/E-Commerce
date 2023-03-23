@@ -1,6 +1,8 @@
 package ntnu.idatt2105.webshop.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import javax.persistence.Entity;
@@ -17,6 +19,8 @@ public class Cart {
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
+
+
     @OneToMany(mappedBy = "cart")
     private List<Product> products;
 
