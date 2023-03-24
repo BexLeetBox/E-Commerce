@@ -140,6 +140,32 @@ public class RestApiController {
         return ResponseEntity.ok(Collections.singletonMap("success", "Item added to cart successfully"));
     }
 
+    @CrossOrigin()
+    @PostMapping(value="/removeFromCart")
+    public ResponseEntity<Map<String, String>> removeFromCart(
+            @RequestParam Long id,
+            Authentication authentication) {
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
+        }
+
+
+        Cart cart = cartRepository.findCartByUser(user);
+        Product product = productRepository.findProductById(id);
+
+        logger.info("Cart before adding product: {}", cart.getId());
+        logger.info("Product to add: {}", product.getId());
+
+        product.removeCart(cart);
+        cart.getProducts().remove(product);
+        cartRepository.save(cart);
+
+        logger.info("Cart after adding product: {}", cart.getProducts().toString());
+        return ResponseEntity.ok(Collections.singletonMap("success", "Item removed from cart successfully"));
+    }
+
 
 
     @ApiOperation(value = "Get all products", response = List.class)

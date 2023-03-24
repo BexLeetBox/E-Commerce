@@ -1,21 +1,21 @@
 <template>
-  <div class="product-container">
-    <div v-for="product in products" :key="product.id" class="product-item">
-      <img :src="getImage(product.image)" :alt="product.name" class="product-image" />
-      <div class="product-details">
-        <label for="product-name">Product:</label>
+  <div class="cart-container">
+    <div v-for="product in products" :key="product.id" class="cart-item">
+      <img :src="getImage(product.image)" :alt="product.name" class="cart-image" />
+      <div class="cart-details">
         <h2>{{ product.briefDescription }}</h2>
-        <label for="Description">Description:</label>
-        <p class="product-description">{{ product.fullDescription }}</p>
-        <label for="seller-name">Seller:</label>
-        <p class="product-description">{{ product.sellerName }}</p>
-        <label for="price">Price:</label>
-        <p class="product-price">{{ product.price + ' NOK.' }}</p>
+        <p class="cart-description">{{ product.fullDescription }}</p>
+        <p class="cart-seller">{{ product.sellerName }}</p>
+        <p class="cart-price">{{ product.price + ' NOK.' }}</p>
+        <button @click="removeFromCart(product)">Remove</button>
       </div>
+    </div>
+    <div class="cart-total">
+      <label>Total Price:</label>
+      <span>{{ calculateTotalPrice() }} NOK.</span>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 
@@ -59,10 +59,38 @@ export default {
           imageUrl: 'https://dummyimage.com/300x300/000/fff'
         }
       ],
-      config: {}
+      config: {},
+      id : {},
     }
   },
   methods: {
+    async removeFromCart(product) {
+      this.config = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }
+      const id = new FormData();
+      id.append('id', product.id)
+     
+      try {
+        console.log(product.id)
+        const response = await axios.post('http://localhost:8001/removeFromCart', id, this.config)
+        location.reload()
+        console.log('token' + this.$store.getters.getToken)
+        console.log(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    calculateTotalPrice() {
+    let totalPrice = 0;
+    for (const product of this.products) {
+      totalPrice += product.price;
+    }
+    return totalPrice;
+  }
+    ,
     getImage(imageData) {
       try {
         return `data:image/jpeg;base64,${imageData}`
@@ -94,6 +122,21 @@ export default {
 
 <style scoped>
 /* Mobile styles */
+button {
+  background-color: var(--button-green-hover);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--button-green);
+}
+
 .product-container {
   display: flex;
   flex-wrap: wrap;
@@ -122,35 +165,43 @@ export default {
 
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {
-  .product-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-    justify-items: center;
-  }
-  .product-item {
+  .cart-container {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    padding: 10px;
-    text-align: center;
+    gap: 10px;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 10px;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    padding: 10px;
   }
-  .product-image {
-    width: 100%;
-    height: auto;
+
+  .cart-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
   }
-  .product-description {
-    margin-top: 10px;
-    font-size: 14px;
-    line-height: 1.2;
+
+  .cart-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  .product-price {
-    margin-top: 5px;
+
+  .cart-price {
     font-weight: bold;
-    font-size: 16px;
+  }
+
+  .cart-total {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    font-weight: bold;
   }
 }
 </style>
