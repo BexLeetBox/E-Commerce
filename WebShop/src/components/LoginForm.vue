@@ -47,6 +47,7 @@ export default {
       } else {
         this.loginStatus = 'Logged in'
         store.commit('SET_LOGINSTATUS', true)
+        localStorage.setItem('isLoggedIn', true);
         await router.push('/')
         console.log(store.getters.getLoginStatus)
         console.log('Logged in')

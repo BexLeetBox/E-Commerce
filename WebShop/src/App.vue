@@ -48,9 +48,9 @@ export default {
   mounted() {
 
     const sellLink = computed(() => {
-      return store.getters.getLogInStatus ? '/sell' : '/login'
+      return localStorage.getItem('isLoggedIn') ? '/sell' : '/login'
     })
-    console.log(store.getters.getLogInStatus)
+    console.log(localStorage.getItem('isLoggedIn'))
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
       return store.getters.getLogInStatus ? '/myaccount' : '/login'
@@ -58,10 +58,10 @@ export default {
 
     // Computed property that returns the correct text based on the isLoggedIn state
     const loginText = computed(() => {
-      return store.getters.getLogInStatus ? 'My Account' : 'Login'
+      return localStorage.getItem('isLoggedIn') ? 'My Account' : 'Login'
     })
 
-    console.log('Logged in status = ' + store.getters.getLoginStatus)
+    console.log('Logged in status = ' + localStorage.getItem('isLoggedIn'))
 
     this.loginLink = loginLink
     this.loginText = loginText
