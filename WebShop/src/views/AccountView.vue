@@ -21,7 +21,7 @@
       </div>
       <div class="form-group">
         <label for="phone-number">Phone Number:</label>
-        <input type="text" id="phone-number" name="phone-number" v-model="phoneNumber" required />
+        <input type="number" id="phone-number" name="phone-number" v-model="phoneNumber" required />
       </div>
       <div class="form-group">
         <label for="address">Address:</label>
@@ -170,6 +170,7 @@ label {
 }
 
 input[type='text'],
+input[type='number'],
 input[type='email'],
 input[type='password'] {
   padding: 10px;

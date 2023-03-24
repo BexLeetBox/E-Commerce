@@ -16,9 +16,6 @@
       :class="{ error }"
       @input="$emit('update:modelValue', $event.target.value)"
     />
-    <BaseErrorMessage v-if="error" :id="`${uuid}-error`">
-      {{ error }}
-    </BaseErrorMessage>
   </template>
   
   <script>

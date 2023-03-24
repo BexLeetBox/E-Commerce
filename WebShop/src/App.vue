@@ -17,11 +17,16 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/" exact :exact-active-class="'active'">Home</RouterLink>
       <div id="myLinks">
         <RouterLink to="/cart" exact :exact-active-class="'active'">My cart</RouterLink>
-        <RouterLink :to="sellLink" exact :exact-active-class="'active'">Sell</RouterLink>
+        <RouterLink :to="sellLink" :class="{ active: $route.path === '/sell' }">Sell</RouterLink>
         <RouterLink to="/about" exact :exact-active-class="'active'">About us</RouterLink>
-        <RouterLink :to="loginLink" id="loginButton" exact :exact-active-class="'active'">{{
-          loginText
-        }}</RouterLink>
+        <RouterLink
+          :to="loginLink"
+          id="loginButton"
+          exact
+          :exact-active-class="'active'"
+          @click.prevent="handleLoginClick"
+          >{{ loginText }}</RouterLink
+        >
       </div>
 
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
@@ -46,18 +51,17 @@ export default {
     }
   },
   mounted() {
-
     const sellLink = computed(() => {
       return localStorage.getItem('isLoggedIn') ? '/sell' : '/login'
     })
     console.log(localStorage.getItem('isLoggedIn'))
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
-      return  localStorage.getItem('isLoggedIn') ? '/myaccount' : '/login'
+      return localStorage.getItem('isLoggedIn') ? '/myaccount' : '/login'
     })
 
     // Computed property that returns the correct text based on the isLoggedIn state
-    const loginText = computed(() => {
+    var loginText = computed(() => {
       return localStorage.getItem('isLoggedIn') ? 'My Account' : 'Login'
     })
 
@@ -66,8 +70,18 @@ export default {
     this.loginLink = loginLink
     this.loginText = loginText
     this.sellLink = sellLink
+
   },
   methods: {
+    handleLoginClick() {
+      if (this.loginText === 'My Account') {
+        // Clear authentication state
+        // Update button text to "Log out"
+        this.loginText = 'Log out'
+        // Redirect to login page
+        this.$router.push('/login')
+      } 
+    },
     incrementCount() {
       store.dispatch('increment')
     },
