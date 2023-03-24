@@ -53,7 +53,7 @@ export default {
     console.log(localStorage.getItem('isLoggedIn'))
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
-      return store.getters.getLogInStatus ? '/myaccount' : '/login'
+      return  localStorage.getItem('isLoggedIn') ? '/myaccount' : '/login'
     })
 
     // Computed property that returns the correct text based on the isLoggedIn state
