@@ -39,16 +39,17 @@ export default {
     return {
       products: [],
       categories: [
-        { id: 1, name: 'Furniture', selected: false },
-        { id: 2, name: 'Clothing', selected: false },
-        { id: 3, name: 'Electronics', selected: false },
-        { id: 4, name: 'Vehicles', selected: false },
-        { id: 5, name: 'Other', selected: false }
+        { id: 1, name: 'Furniture', selected: true },
+        { id: 2, name: 'Clothing', selected: true },
+        { id: 3, name: 'Electronics', selected: true },
+        { id: 4, name: 'Vehicles', selected: true },
+        { id: 5, name: 'Other', selected: true }
         // ...
       ],
+
       selectedCategories: [],
       config: {},
-      id: {},
+      id: {}
     }
   },
   methods: {
@@ -58,13 +59,13 @@ export default {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }
-      const id = new FormData();
+      const id = new FormData()
       id.append('id', product.id)
-     
+
       try {
         console.log(product.id)
         const response = await axios.post('http://localhost:8001/addToCart', id, this.config)
-        
+
         console.log('token' + this.$store.getters.getToken)
         console.log(response.data)
       } catch (error) {
@@ -93,6 +94,7 @@ export default {
       .get('http://localhost:8001/products')
       .then((response) => {
         this.products = response.data
+        console.log(response.data)
       })
       .catch((error) => {
         console.log(error)

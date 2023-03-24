@@ -223,8 +223,7 @@ public class RestApiController {
     })
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
-    public List<ProductDTO> getProducts(Authentication authentication){
-        if (authentication != null && authentication.isAuthenticated()) {
+    public List<ProductDTO> getProducts(){
             Iterable<Product> products = productRepository.findAll();
             List<ProductDTO> productDTOS = new ArrayList<>();
             for (Product product : products) {
@@ -234,10 +233,8 @@ public class RestApiController {
                         product.getSeller().getUsername());
                 productDTOS.add(productDTO);
             }
+            logger.info("Product dto being sent: {}", productDTOS);
             return productDTOS;
-        } else {
-            return null;
-        }
     }
 
 
