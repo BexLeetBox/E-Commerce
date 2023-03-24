@@ -49,6 +49,7 @@ export default {
         store.commit('SET_LOGINSTATUS', true)
         localStorage.setItem('isLoggedIn', true);
         await router.push('/')
+        window.location.reload()
         console.log(store.getters.getLoginStatus)
         console.log('Logged in')
       }

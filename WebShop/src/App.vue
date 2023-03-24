@@ -24,7 +24,6 @@ import { RouterLink, RouterView } from 'vue-router'
           id="loginButton"
           exact
           :exact-active-class="'active'"
-          @click.prevent="handleLoginClick"
           >{{ loginText }}</RouterLink
         >
       </div>
@@ -38,10 +37,11 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 <script>
 import store from '../src/stores/index'
-
 import { computed } from 'vue'
 
+
 export default {
+  
   data() {
     return {
       count: 0,
@@ -51,6 +51,7 @@ export default {
     }
   },
   mounted() {
+
     const sellLink = computed(() => {
       return localStorage.getItem('isLoggedIn') ? '/sell' : '/login'
     })
@@ -73,15 +74,6 @@ export default {
 
   },
   methods: {
-    handleLoginClick() {
-      if (this.loginText === 'My Account') {
-        // Clear authentication state
-        // Update button text to "Log out"
-        this.loginText = 'Log out'
-        // Redirect to login page
-        this.$router.push('/login')
-      } 
-    },
     incrementCount() {
       store.dispatch('increment')
     },

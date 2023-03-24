@@ -114,6 +114,7 @@ export default {
         console.log(response.data)
       })
       .catch((error) => {
+        this.products = [];
         console.log(error)
       })
   }

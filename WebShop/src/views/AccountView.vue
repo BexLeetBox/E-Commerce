@@ -52,6 +52,8 @@
 <script>
 import axios from 'axios'
 
+
+
 export default {
   data() {
     return {
@@ -93,7 +95,17 @@ export default {
         .catch((error) => {
           console.error(error)
         })
-    }
+    },
+    logOut(){
+      console.log("trying to logout")
+      localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('token');
+        // Clear authentication state
+        // Update button text to "Log in"
+        // Redirect to login page
+        window.location.reload()
+        this.$router.push('/login')
+      }
   },
   mounted(){
     const config = {
