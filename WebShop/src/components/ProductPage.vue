@@ -46,10 +46,31 @@ export default {
         { id: 5, name: 'Other', selected: false }
         // ...
       ],
-      selectedCategories: []
+      selectedCategories: [],
+      config: {},
+      id: {},
     }
   },
   methods: {
+    async addToCart(product) {
+      this.config = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }
+      const id = new FormData();
+      id.append('id', product.id)
+     
+      try {
+        console.log(product.id)
+        const response = await axios.post('http://localhost:8001/addToCart', id, this.config)
+        
+        console.log('token' + this.$store.getters.getToken)
+        console.log(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     filterProducts() {
       this.selectedCategories = this.categories
         .filter((category) => category.selected)
@@ -81,8 +102,7 @@ export default {
 </script>
 
 <style scoped>
-
-button{
+button {
   background-color: var(--button-green-hover);
   color: white;
   font-size: 1.2rem;

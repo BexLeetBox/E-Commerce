@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
     ArrayList<Product> findProductsBySeller(User seller);
-
+    Product findProductById(Long id);
 }

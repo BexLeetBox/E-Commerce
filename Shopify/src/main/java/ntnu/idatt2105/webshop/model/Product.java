@@ -3,6 +3,8 @@ package ntnu.idatt2105.webshop.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Product")
 @Table(name = "Product")
@@ -20,16 +22,18 @@ public class Product {
     @Column(name = "image", columnDefinition="LONGBLOB")
     private byte[] image;
 
-
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User seller;
 
+    @ManyToMany
+    @JoinTable(
+            name = "cart_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id")
+    )
+    private Set<Cart> carts = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
 
     public Product(String briefDescription, String fullDescription, String category, double latitude, double longitude,
                    double price, byte[] image, User user) {
@@ -45,6 +49,15 @@ public class Product {
 
     public Product() {
 
+    }
+
+    public void addCart(Cart cart) {
+        this.carts.add(cart);
+        cart.getProducts().add(this);
+    }
+    public void removeCart(Cart cart) {
+        this.carts.remove(cart);
+        cart.getProducts().remove(this);
     }
 
     public Long getId() {
@@ -117,5 +130,12 @@ public class Product {
 
     public void setSeller(User seller) {
         this.seller = seller;
+    }
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
     }
 }

@@ -46,6 +46,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+
     }
 
     protected User() {
@@ -57,6 +58,7 @@ public class User {
         this.username = "username";
         this.password = "password";
     }
+
 
     @Override
     public boolean equals(Object o) {

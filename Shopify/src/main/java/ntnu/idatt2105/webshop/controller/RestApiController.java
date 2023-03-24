@@ -15,6 +15,7 @@ import ntnu.idatt2105.webshop.repositories.CartRepository;
 import ntnu.idatt2105.webshop.repositories.ProductRepository;
 import ntnu.idatt2105.webshop.repositories.UserRepository;
 import ntnu.idatt2105.webshop.util.PasswordHashing;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,11 @@ public class RestApiController {
 
         try {
             String hashedPassword = PasswordHashing.generatePasswordHash(password);
+
             User user = userRepository.save(new User(username, hashedPassword, email));
+            Cart cart = new Cart(user);
+            user.setCart(cart);
+            cartRepository.save(cart);
             logger.info("User created: id={}, username={}", user.getId(), user.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (Exception e) {
@@ -112,12 +117,7 @@ public class RestApiController {
     @CrossOrigin()
     @PostMapping(value="/addToCart")
     public ResponseEntity<Map<String, String>> addToCart(
-            @RequestParam("briefDescription") String briefDescription,
-            @RequestParam("fullDescription") String fullDescription,
-            @RequestParam("category") String category,
-            @RequestParam("latitude") Double latitude,
-            @RequestParam("longitude") Double longitude,
-            @RequestParam("price") Double price,
+            @RequestParam Long id,
             Authentication authentication) {
 
         User user = userRepository.findByUsername(authentication.getName());
@@ -125,8 +125,21 @@ public class RestApiController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
         }
 
-      return null;
+
+        Cart cart = cartRepository.findCartByUser(user);
+        Product product = productRepository.findProductById(id);
+
+        logger.info("Cart before adding product: {}", cart.getId());
+        logger.info("Product to add: {}", product.getId());
+
+        product.addCart(cart);
+        cart.getProducts().add(product);
+        cartRepository.save(cart);
+
+        logger.info("Cart after adding product: {}", cart.getProducts().toString());
+        return ResponseEntity.ok(Collections.singletonMap("success", "Item added to cart successfully"));
     }
+
 
 
     @ApiOperation(value = "Get all products", response = List.class)
@@ -153,6 +166,42 @@ public class RestApiController {
         }
     }
 
+
+    /**
+     * Retrieve the products in the authenticated user's cart.
+     *
+     * @param authentication the authentication object for the current request
+     * @return a list of product DTOs
+     */
+    @ApiOperation(value = "Get the products in the authenticated user's cart", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Products retrieved successfully"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @GetMapping("/myCart")
+    public ResponseEntity<List<ProductDTO>> getCart(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Cart cart = cartRepository.findCartByUser(user);
+        Iterable<Product> products = cart.getProducts();
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
+                    product.getFullDescription(), product.getCategory(), product.getLatitude(),
+                    product.getLongitude(), product.getPrice(), product.getImage(),
+                    product.getSeller().getUsername());
+            productDTOs.add(productDTO);
+        }
+        return ResponseEntity.ok(productDTOs);
+    }
 
     @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
     @ApiResponses(value = {
