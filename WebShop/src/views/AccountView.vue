@@ -43,6 +43,9 @@
       </div>
       <button type="submit">Change password</button>
     </form>
+    <div id="logoutDiv">
+    <button type="button" @click="logOut" style="margin: 10px;">Log out</button>
+  </div>
   </div>
 </template>
 
@@ -118,6 +121,11 @@ export default {
 </script>
 
 <style>
+#logoutDiv{
+  margin-top: 5px;
+  background-color: #333333;
+  width: 100vw;
+}
 hr {
   margin: 10px;
   border-color: var(--dark-grey);
