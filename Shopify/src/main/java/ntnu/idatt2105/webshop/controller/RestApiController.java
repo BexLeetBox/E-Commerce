@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import ntnu.idatt2105.webshop.dto.ProductDTO;
+import ntnu.idatt2105.webshop.dto.UserDTO;
 import ntnu.idatt2105.webshop.model.Cart;
 import ntnu.idatt2105.webshop.model.Product;
 import ntnu.idatt2105.webshop.model.User;
@@ -15,7 +16,6 @@ import ntnu.idatt2105.webshop.repositories.CartRepository;
 import ntnu.idatt2105.webshop.repositories.ProductRepository;
 import ntnu.idatt2105.webshop.repositories.UserRepository;
 import ntnu.idatt2105.webshop.util.PasswordHashing;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +76,54 @@ public class RestApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/account")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<UserDTO> getUser(Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (authentication!=null && authentication.isAuthenticated()){
+            UserDTO userDto = new UserDTO(user.getId(),user.getFirstName(), user.getLastName(), user.getEmail(),
+                    user.getPhoneNumber(), user.getAddress(), user.getUsername());
+            return ResponseEntity.ok(userDto);
+        }
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    }
+
+
+    @CrossOrigin
+    @PutMapping("/updateAccount")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto, Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (authentication!=null && authentication.isAuthenticated()){
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setEmail(userDto.getEmail());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setAddress(userDto.getAddress());
+
+            userRepository.save(user);
+
+            UserDTO updatedUserDto = new UserDTO(user.getId(),user.getFirstName(), user.getLastName(), user.getEmail(),
+                    user.getPhoneNumber(), user.getAddress(), user.getUsername());
+
+            return ResponseEntity.ok(updatedUserDto);
+        }
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    }
+
+
 
     @ApiOperation(value = "Sell a new product", response = Map.class)
     @ApiResponses(value = {
@@ -176,17 +224,17 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
     public List<ProductDTO> getProducts(Authentication authentication){
-        if (authentication != null || true) {
+        if (authentication != null && authentication.isAuthenticated()) {
             Iterable<Product> products = productRepository.findAll();
-            List<ProductDTO> productDTOs = new ArrayList<>();
+            List<ProductDTO> productDTOS = new ArrayList<>();
             for (Product product : products) {
                 ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
                         product.getFullDescription(), product.getCategory(), product.getLatitude(),
                         product.getLongitude(), product.getPrice(), product.getImage(),
                         product.getSeller().getUsername());
-                productDTOs.add(productDTO);
+                productDTOS.add(productDTO);
             }
-            return productDTOs;
+            return productDTOS;
         } else {
             return null;
         }
@@ -218,15 +266,15 @@ public class RestApiController {
 
         Cart cart = cartRepository.findCartByUser(user);
         Iterable<Product> products = cart.getProducts();
-        List<ProductDTO> productDTOs = new ArrayList<>();
+        List<ProductDTO> productDTOS = new ArrayList<>();
         for (Product product : products) {
             ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
                     product.getFullDescription(), product.getCategory(), product.getLatitude(),
                     product.getLongitude(), product.getPrice(), product.getImage(),
                     product.getSeller().getUsername());
-            productDTOs.add(productDTO);
+            productDTOS.add(productDTO);
         }
-        return ResponseEntity.ok(productDTOs);
+        return ResponseEntity.ok(productDTOS);
     }
 
     @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
