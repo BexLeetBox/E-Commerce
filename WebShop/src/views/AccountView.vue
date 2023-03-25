@@ -51,8 +51,7 @@
 
 <script>
 import axios from 'axios'
-
-
+import router from '@/router/index.js'
 
 export default {
   data() {
@@ -96,15 +95,16 @@ export default {
           console.error(error)
         })
     },
-    logOut(){
+   async logOut(){
       console.log("trying to logout")
       localStorage.removeItem('isLoggedIn')
       localStorage.removeItem('token');
         // Clear authentication state
         // Update button text to "Log in"
         // Redirect to login page
+        
         window.location.reload()
-        this.$router.push('/login')
+        await router.push('/login')
       }
   },
   mounted(){

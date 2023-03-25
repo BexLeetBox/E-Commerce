@@ -9,8 +9,11 @@ public class UserDTO {
     private String address;
     private String username;
 
+    private String newPassword;
     // Constructors
     public UserDTO() {}
+
+
 
     public UserDTO(Long id, String firstName, String lastName, String email, String phoneNumber, String address, String username) {
         this.id = id;
@@ -58,7 +61,13 @@ public class UserDTO {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+    public String getNewPassword() {
+        return newPassword;
+    }
 
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }

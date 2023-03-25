@@ -99,7 +99,7 @@ public class RestApiController {
     @CrossOrigin
     @PutMapping("/updateAccount")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto, Authentication authentication) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user = userRepository.findByUsername(authentication.getName());
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -110,6 +110,18 @@ public class RestApiController {
             user.setEmail(userDto.getEmail());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setAddress(userDto.getAddress());
+
+            // Check if newPassword field is present in the request
+            String newPassword = userDto.getNewPassword();
+            if (newPassword != null && !newPassword.isEmpty()) {
+                // Check if old password is correct
+                String oldPassword = user.getPassword();
+                if (!PasswordHashing.validatePassword(oldPassword, user.getPassword())) {
+                    return ResponseEntity.badRequest().build();
+                }
+                // Set the new password
+                user.setPassword(PasswordHashing.generatePasswordHash(newPassword));
+            }
 
             userRepository.save(user);
 
