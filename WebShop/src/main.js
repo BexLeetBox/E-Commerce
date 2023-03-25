@@ -17,7 +17,7 @@ app.use(router);
 app.use(store);
 app.use(VueGoogleMaps, {
     load: {
-        key: 'AIzaSyCGte24sbY2tFONaLk-lq_fC4ImNQ24opg        ',
+        key: 'AIzaSyCGte24sbY2tFONaLk-lq_fC4ImNQ24opg',
     },
 })
 

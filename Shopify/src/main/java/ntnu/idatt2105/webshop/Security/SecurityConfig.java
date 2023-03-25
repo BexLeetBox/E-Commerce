@@ -30,25 +30,37 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .cors()
+//                .and()
+//                .csrf()
+//                .disable()
+//                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "/token").permitAll()
+//                .antMatchers(HttpMethod.POST, "/register").permitAll()
+//                .antMatchers(HttpMethod.POST, "/login").permitAll()
+//                .antMatchers(HttpMethod.GET, "/products").permitAll()
+//                .antMatchers(HttpMethod.POST, "/sell-item").permitAll()
+//                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
+//                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
+//                .antMatchers(HttpMethod.POST, "/removeFromCart").permitAll()
+//                .antMatchers(HttpMethod.GET, "/myCart").permitAll()
+//                .antMatchers(HttpMethod.POST, "/messages").permitAll()
+//                .antMatchers(HttpMethod.POST, "/chat").permitAll()
+//                .antMatchers(HttpMethod.GET, "/chat").permitAll()
+//
+//
+//
+//                .anyRequest().authenticated();
+//
+//    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
-                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/token").permitAll()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/products").permitAll()
-                .antMatchers(HttpMethod.POST, "/sell-item").permitAll()
-                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
-                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
-                .antMatchers(HttpMethod.POST, "/removeFromCart").permitAll()
-                .antMatchers(HttpMethod.GET, "/myCart").permitAll()
-                .anyRequest().authenticated();
+        http.authorizeRequests().anyRequest().permitAll();
     }
 
     @Bean
