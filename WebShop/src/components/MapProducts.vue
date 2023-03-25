@@ -1,5 +1,6 @@
 <template>
   <div class="map-wrapper">
+    <div>{{info}}</div>
       <GMapMap
         :center="center"
         :zoom="12"
@@ -8,20 +9,21 @@
           mapTypeControl: false,
           scaleControl: false,
           streetViewControl: false,
-          rotateControl: false,
+          rotateControl: false, 
           fullscreenControl: false
         }"
         style="width: 500px; height: 300px"
       >
         <GMapCluster>
-          <GMapMarker
-            :key="index"
-            v-for="(m, index) in markers"
-            :position="m.position"
-            :clickable="true"
-            :draggable="true"
-            @click="center = m.position"
-          />
+          <GMapMarker :key="index" v-for="(m, index) in info" :position="{lat: m.latitude, lng: m.longitude}" :clickable="true" :draggable="false"
+        @click="openMarker(m.id)" >
+          <GMapInfoWindow
+          :closeclick="true"
+          @closeclick="openMarker(null)"
+          :opened="openedMarkerID === m.id">
+              <div> {{ m.brief-description }} </div>
+           </GMapInfoWindow>
+          </GMapMarker>
         </GMapCluster>
       </GMapMap>
   </div>
@@ -35,14 +37,16 @@ export default {
       options: {
         mapId: '1e8c8a920e03249a'
       },
-      markers: [
-        {
-          position: {
-            lat: 51.093048,
-            lng: 6.84212
-          }
-        } // Along list of clusters
-      ]
+    }
+  },
+  props: {
+    products: {
+      type: Array
+    }
+  },
+  methods: {
+    openMarker(id) {
+       this.openedMarkerID = id
     }
   }
 }
