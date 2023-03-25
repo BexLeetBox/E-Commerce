@@ -119,6 +119,7 @@ export default {
 </script>
 
 <style scoped>
+
 button {
   background-color: var(--button-green-hover);
   color: white;
@@ -159,6 +160,7 @@ button:hover {
   font-size: 16px;
   text-align: center;
 }
+
 
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {

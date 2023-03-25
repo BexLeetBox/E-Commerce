@@ -11,8 +11,8 @@
         </div>
       </div>
       <div class="cart-total">
-        <label>Total Price:</label>
-        <span>{{ calculateTotalPrice() }} NOK.</span>
+        <label>Total Price: </label>
+        <span>&nbsp;{{ calculateTotalPrice() }} NOK.</span>
       </div>
     </div>
   </template>

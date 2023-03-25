@@ -12,7 +12,7 @@
     </div>
     <div class="cart-total">
       <label>Total Price:</label>
-      <span>{{ calculateTotalPrice() }} NOK.</span>
+      <span>&nbsp;{{ calculateTotalPrice() }} NOK.</span>
     </div>
   </div>
 </template>
@@ -126,8 +126,8 @@ export default {
 button {
   background-color: var(--button-green-hover);
   color: white;
-  font-size: 1.2rem;
-  padding: 1rem;
+  font-size: 1rem;
+  padding: .7rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -175,6 +175,7 @@ button:hover {
   }
 
   .cart-item {
+    width: 100vw;
     display: flex;
     gap: 10px;
     background-color: #fff;
