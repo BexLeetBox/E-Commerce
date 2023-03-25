@@ -17,11 +17,15 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/" exact :exact-active-class="'active'">Home</RouterLink>
       <div id="myLinks">
         <RouterLink to="/cart" exact :exact-active-class="'active'">My cart</RouterLink>
-        <RouterLink :to="sellLink" exact :exact-active-class="'active'">Sell</RouterLink>
+        <RouterLink :to="sellLink" :class="{ active: $route.path === '/sell' }">Sell</RouterLink>
         <RouterLink to="/about" exact :exact-active-class="'active'">About us</RouterLink>
-        <RouterLink :to="loginLink" id="loginButton" exact :exact-active-class="'active'">{{
-          loginText
-        }}</RouterLink>
+        <RouterLink
+          :to="loginLink"
+          id="loginButton"
+          exact
+          :exact-active-class="'active'"
+          >{{ loginText }}</RouterLink
+        >
       </div>
 
       <a href="javascript:void(0);" class="icon" @click="menuDr()">
@@ -33,10 +37,11 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 <script>
 import store from '../src/stores/index'
-
 import { computed } from 'vue'
 
+
 export default {
+  
   data() {
     return {
       count: 0,
@@ -48,24 +53,25 @@ export default {
   mounted() {
 
     const sellLink = computed(() => {
-      return store.getters.getLogInStatus ? '/sell' : '/login'
+      return localStorage.getItem('isLoggedIn') ? '/sell' : '/login'
     })
-    console.log(store.getters.getLogInStatus)
+    console.log(localStorage.getItem('isLoggedIn'))
     // Computed property that returns the correct link based on the isLoggedIn state
     const loginLink = computed(() => {
-      return store.getters.getLogInStatus ? '/myaccount' : '/login'
+      return localStorage.getItem('isLoggedIn') ? '/myaccount' : '/login'
     })
 
     // Computed property that returns the correct text based on the isLoggedIn state
-    const loginText = computed(() => {
-      return store.getters.getLogInStatus ? 'My Account' : 'Login'
+    var loginText = computed(() => {
+      return localStorage.getItem('isLoggedIn') ? 'My Account' : 'Login'
     })
 
-    console.log('Logged in status = ' + store.getters.getLoginStatus)
+    console.log('Logged in status = ' + localStorage.getItem('isLoggedIn'))
 
     this.loginLink = loginLink
     this.loginText = loginText
     this.sellLink = sellLink
+
   },
   methods: {
     incrementCount() {

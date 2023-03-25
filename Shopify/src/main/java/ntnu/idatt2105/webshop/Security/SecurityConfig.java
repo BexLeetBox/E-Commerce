@@ -60,7 +60,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll();
+        http
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/token").permitAll()
+                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/products").permitAll()
+                .antMatchers(HttpMethod.POST, "/sell-item").permitAll()
+                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
+                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
+                .antMatchers(HttpMethod.POST, "/removeFromCart").permitAll()
+                .antMatchers(HttpMethod.GET, "/myCart").permitAll()
+                .antMatchers(HttpMethod.GET, "/account").permitAll()
+                .antMatchers(HttpMethod.PUT, "/updateAccount").permitAll()
+                .anyRequest().authenticated();
     }
 
     @Bean

@@ -38,6 +38,11 @@ const router = createRouter({
       path: '/messages',
       name: 'messages',
       component: () => import('../views/MessagesView.vue')
+    },
+    {
+      path: '/myaccount',
+      name: 'myaccount',
+      component: () => import('../views/AccountView.vue')
     }
   ]
 })

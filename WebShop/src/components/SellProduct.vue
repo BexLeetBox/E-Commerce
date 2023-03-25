@@ -13,7 +13,14 @@
         <label for="full-description">Full Description:</label>
         <input type="text" id="full-description" name="fullDescription" /><br /><br />
         <label for="category">Category:</label>
-        <input type="text" id="category" name="category" /><br /><br />
+        <select id="category" name="category">
+          <option value="Furniture">Furniture</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Vehicle">Vehicle</option>
+          <option value="Other">Other</option>
+        </select><br /><br />
+        
         <label for="latitude">Latitude:</label>
         <input type="text" id="latitude" name="latitude" /><br /><br />
         <label for="longitude">Longitude:</label>
@@ -127,7 +134,7 @@ label {
 }
 
 input,
-textarea {
+textarea, select {
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;

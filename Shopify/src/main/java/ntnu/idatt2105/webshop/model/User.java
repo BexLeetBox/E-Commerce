@@ -20,6 +20,15 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String address;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Column(unique = true)
     private String email;
     @OneToOne(mappedBy="user")
