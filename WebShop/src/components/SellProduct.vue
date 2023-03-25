@@ -11,7 +11,7 @@
         <label for="brief-description">Brief Description:</label>
         <input type="text" id="brief-description" name="briefDescription" /><br /><br />
         <label for="full-description">Full Description:</label>
-        <input type="text" id="full-description" name="fullDescription" /><br /><br />
+        <textarea id="full-description" rows="4" cols="50" name="full-description"></textarea><br /><br />
         <label for="category">Category:</label>
         <select id="category" name="category">
           <option value="Furniture">Furniture</option>

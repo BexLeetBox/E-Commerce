@@ -3,12 +3,15 @@
     <div v-for="product in products" :key="product.id" class="cart-item">
       <img :src="getImage(product.image)" :alt="product.name" class="cart-image" />
       <div class="cart-details">
-        <h2>{{ product.briefDescription }}</h2>
-        <p class="cart-description">{{ product.fullDescription }}</p>
+        <label for="briefDescription">Product name:</label>
+        <p>{{ product.briefDescription }}</p>
+        <label for="sellername">Seller:</label>
         <p class="cart-seller">{{ product.sellerName }}</p>
+        <label for="price">Price:</label>
         <p class="cart-price">{{ product.price + ' NOK.' }}</p>
-        <button @click="removeFromCart(product)">Remove</button>
+        
       </div>
+      <button @click="removeFromCart(product)">Remove</button>
     </div>
     <div class="cart-total">
       <label>Total Price:</label>
@@ -123,6 +126,7 @@ export default {
 
 <style scoped>
 /* Mobile styles */
+
 button {
   background-color: var(--button-green-hover);
   color: white;
@@ -132,78 +136,58 @@ button {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  height: 50px;
+ 
+  
 }
 
 button:hover {
   background-color: var(--button-green);
 }
 
-.product-container {
+.cart-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
-.product-item {
-  justify-content: center;
-  width: 100%;
-  padding: 10px;
+
+.cart-item {
+  width: 99vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  
 }
-.product-image {
-  width: 70%;
-  height: auto;
+
+.cart-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
-.product-description {
-  margin-top: 10px;
-  font-size: 14px;
-  text-align: center;
+
+.cart-details {
+  /**display: flex;
+  flex-direction: column;
+  justify-content: space-between;*/
+  display: grid;
+  grid-template-columns: repeat(2, 10fr);
+  grid-template-rows: repeat(2, auto);
+  grid-gap: 10px;
 }
-.product-price {
-  margin-top: 5px;
+
+.cart-price {
   font-weight: bold;
-  font-size: 16px;
-  text-align: center;
 }
 
-/* Tablet and desktop styles */
-@media screen and (min-width: 768px) {
-  .cart-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .cart-item {
-    width: 100vw;
-    display: flex;
-    gap: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-  }
-
-  .cart-image {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-  }
-
-  .cart-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .cart-price {
-    font-weight: bold;
-  }
-
-  .cart-total {
-    display: flex;
-    justify-content: center;
-    margin-top: auto;
-    font-weight: bold;
-  }
+.cart-total {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  font-weight: bold;
 }
 </style>
