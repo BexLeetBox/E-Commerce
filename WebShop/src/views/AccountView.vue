@@ -31,7 +31,7 @@
     </form>
 
     <form class="account-form" @submit.prevent="updateAccount">
-    <h2>Change Password</h2>
+    <h2>Change Password (Not functional yet)</h2>
 
       <div class="form-group">
         <label for="old-password">Old password:</label>

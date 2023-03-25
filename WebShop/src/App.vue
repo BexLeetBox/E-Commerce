@@ -18,6 +18,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <div id="myLinks">
         <RouterLink to="/cart" exact :exact-active-class="'active'">My cart</RouterLink>
         <RouterLink :to="sellLink" :class="{ active: $route.path === '/sell' }">Sell</RouterLink>
+        <RouterLink :to="listingLink" :class="{ active: $route.path === '/mylisting' }">My listings</RouterLink>
         <RouterLink to="/about" exact :exact-active-class="'active'">About us</RouterLink>
         <RouterLink
           :to="loginLink"
@@ -47,7 +48,8 @@ export default {
       count: 0,
       loginLink: '/login',
       loginText: 'Login',
-      sellLink: '/login'
+      sellLink: '/login',
+      listingLink: '/login'
     }
   },
   mounted() {
@@ -66,11 +68,16 @@ export default {
       return localStorage.getItem('isLoggedIn') ? 'My Account' : 'Login'
     })
 
+    var listingLink = computed(() => {
+      return localStorage.getItem('isLoggedIn') ? '/mylisting' : '/login'
+    })
+
     console.log('Logged in status = ' + localStorage.getItem('isLoggedIn'))
 
     this.loginLink = loginLink
     this.loginText = loginText
     this.sellLink = sellLink
+    this.listingLink = listingLink
 
   },
   methods: {

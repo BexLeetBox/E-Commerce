@@ -235,8 +235,16 @@ public class RestApiController {
     })
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
-    public List<ProductDTO> getProducts(){
+    public List<ProductDTO> getProducts(@RequestParam(required = false, name = "categories") List<String> categories){
             Iterable<Product> products = productRepository.findAll();
+        if (categories != null && !categories.isEmpty()) {
+            // Filter products by categories
+            products = productRepository.findByCategoryIn(categories);
+        } else {
+            // Return all products
+            products = productRepository.findAll();
+        }
+
             List<ProductDTO> productDTOS = new ArrayList<>();
             for (Product product : products) {
                 ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
@@ -285,6 +293,49 @@ public class RestApiController {
         }
         return ResponseEntity.ok(productDTOS);
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/myListing", method=RequestMethod.GET)
+    public ResponseEntity<List<Product>> getListing(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<Product> products = productRepository.findProductsBySeller(user);
+
+        return ResponseEntity.ok(products);
+    }
+
+    @CrossOrigin()
+    @PostMapping(value="/removeFromListing")
+    public ResponseEntity<Map<String, String>> removeFromListing(
+            @RequestParam Long id,
+            Authentication authentication) {
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
+        }
+
+        Product product = productRepository.findProductById(id);
+        if (product == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Product not found"));
+        }
+        // check if the product belongs to the user
+        if (!product.getSeller().getUsername().equals(user.getUsername())) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "You cannot remove this product"));
+        }
+        // remove the product from the database
+        productRepository.delete(product);
+
+        return ResponseEntity.ok(Collections.singletonMap("success", "Item removed from listing successfully"));
+    }
+
 
     @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
     @ApiResponses(value = {

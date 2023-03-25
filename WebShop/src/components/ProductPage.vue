@@ -6,7 +6,7 @@
         <input
           type="checkbox"
           :value="category.id"
-          v-model="selectedCategories"
+          :checked="category.selected"
           @change="filterProducts"
         />
         <label>{{ category.name }}</label>
@@ -42,14 +42,15 @@ export default {
         { id: 1, name: 'Furniture', selected: true },
         { id: 2, name: 'Clothing', selected: true },
         { id: 3, name: 'Electronics', selected: true },
-        { id: 4, name: 'Vehicles', selected: true },
+        { id: 4, name: 'Vehicle', selected: true },
         { id: 5, name: 'Other', selected: true }
         // ...
       ],
 
       selectedCategories: [],
       config: {},
-      id: {}
+      id: {},
+      allProducts: []
     }
   },
   methods: {
@@ -72,13 +73,23 @@ export default {
         console.error(error)
       }
     },
-    filterProducts() {
+    async filterProducts() {
       this.selectedCategories = this.categories
         .filter((category) => category.selected)
-        .map((category) => category.id)
+        .map((category) => category.name)
 
-      // Perform filtering logic here using this.selectedCategories
-      // ...
+      const params = new URLSearchParams()
+      params.append('categories', this.selectedCategories.join(','))
+
+      try {
+        const response = await axios.get('http://localhost:8001/products', {
+          params: params
+        })
+
+        this.products = response.data
+      } catch (error) {
+        console.error(error)
+      }
     },
     getImage(imageData) {
       try {
@@ -93,7 +104,8 @@ export default {
     axios
       .get('http://localhost:8001/products')
       .then((response) => {
-        this.products = response.data
+        this.allProducts = response.data
+        this.products = this.allProducts
         console.log(response.data)
       })
       .catch((error) => {
