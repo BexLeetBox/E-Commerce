@@ -236,7 +236,7 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
     public List<ProductDTO> getProducts(@RequestParam(required = false, name = "categories") List<String> categories){
-            Iterable<Product> products = productRepository.findAll();
+            Iterable<Product> products;
         if (categories != null && !categories.isEmpty()) {
             // Filter products by categories
             products = productRepository.findByCategoryIn(categories);

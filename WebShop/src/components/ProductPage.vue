@@ -8,6 +8,7 @@
           :value="category.id"
           :checked="category.selected"
           @change="filterProducts"
+          @click="category.selected = !category.selected"
         />
         <label>{{ category.name }}</label>
       </li>
@@ -19,8 +20,6 @@
       <div class="product-details">
         <label for="product-name">Product:</label>
         <h2>{{ product.briefDescription }}</h2>
-        <label for="Description">Description:</label>
-        <p class="product-description">{{ product.fullDescription }}</p>
         <label for="seller-name">Seller:</label>
         <p class="product-description">{{ product.sellerName }}</p>
         <label for="price">Price:</label>
@@ -39,11 +38,11 @@ export default {
     return {
       products: [],
       categories: [
-        { id: 1, name: 'Furniture', selected: true },
-        { id: 2, name: 'Clothing', selected: true },
-        { id: 3, name: 'Electronics', selected: true },
-        { id: 4, name: 'Vehicle', selected: true },
-        { id: 5, name: 'Other', selected: true }
+        { id: 1, name: 'Furniture', selected: false },
+        { id: 2, name: 'Clothing', selected: false },
+        { id: 3, name: 'Electronics', selected: false },
+        { id: 4, name: 'Vehicle', selected: false },
+        { id: 5, name: 'Other', selected: false }
         // ...
       ],
 
@@ -74,6 +73,8 @@ export default {
       }
     },
     async filterProducts() {
+
+  
       this.selectedCategories = this.categories
         .filter((category) => category.selected)
         .map((category) => category.name)
@@ -81,12 +82,14 @@ export default {
       const params = new URLSearchParams()
       params.append('categories', this.selectedCategories.join(','))
 
+      
       try {
         const response = await axios.get('http://localhost:8001/products', {
           params: params
         })
 
         this.products = response.data
+        console.log(response.data)
       } catch (error) {
         console.error(error)
       }
