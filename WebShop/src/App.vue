@@ -157,7 +157,18 @@ export default {
   background-color: #04aa6d;
   color: white;
 }
-
+map-wrapper{
+  text-align: center;
+}
+.vue-map-container{
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 8000%;
+}
+.vue-map{
+  text-align: center;
+}
 @media screen and (min-width: 700px) {
   #loginButton {
     background-color: #4caf50;

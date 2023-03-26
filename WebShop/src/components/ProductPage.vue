@@ -141,6 +141,10 @@ export default {
 </script>
 
 <style scoped>
+map-wrapper{
+  text-align: center;
+}
+
 
 button {
   background-color: var(--button-green-hover);

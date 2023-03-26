@@ -48,10 +48,13 @@ export default {
   },
   methods: {
     printCoords(){
-      console.log(position)
+      console.log(this.markers.position)
     }
   }
 }
 </script>
+<style scoped>
+.
+</style>
 
 
