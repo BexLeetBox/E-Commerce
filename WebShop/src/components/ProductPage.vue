@@ -6,8 +6,9 @@
         <input
           type="checkbox"
           :value="category.id"
-          v-model="selectedCategories"
+          :checked="category.selected"
           @change="filterProducts"
+          @click="category.selected = !category.selected"
         />
         <label>{{ category.name }}</label>
       </li>
@@ -20,8 +21,6 @@
       <div class="product-details">
         <label for="product-name">Product:</label>
         <h2>{{ product.briefDescription }}</h2>
-        <label for="Description">Description:</label>
-        <p class="product-description">{{ product.fullDescription }}</p>
         <label for="seller-name">Seller:</label>
         <p class="product-description">{{ product.sellerName }}</p>
         <label for="price">Price:</label>
@@ -44,17 +43,18 @@ export default {
     return {
       products: [],
       categories: [
-        { id: 1, name: 'Furniture', selected: true },
-        { id: 2, name: 'Clothing', selected: true },
-        { id: 3, name: 'Electronics', selected: true },
-        { id: 4, name: 'Vehicles', selected: true },
-        { id: 5, name: 'Other', selected: true }
+        { id: 1, name: 'Furniture', selected: false },
+        { id: 2, name: 'Clothing', selected: false },
+        { id: 3, name: 'Electronics', selected: false },
+        { id: 4, name: 'Vehicle', selected: false },
+        { id: 5, name: 'Other', selected: false }
         // ...
       ],
 
       selectedCategories: [],
       config: {},
-      id: {}
+      id: {},
+      allProducts: []
     }
   },
   methods: {
@@ -77,13 +77,27 @@ export default {
         console.error(error)
       }
     },
-    filterProducts() {
+    async filterProducts() {
+
+  
       this.selectedCategories = this.categories
         .filter((category) => category.selected)
-        .map((category) => category.id)
+        .map((category) => category.name)
 
-      // Perform filtering logic here using this.selectedCategories
-      // ...
+      const params = new URLSearchParams()
+      params.append('categories', this.selectedCategories.join(','))
+
+      
+      try {
+        const response = await axios.get('http://localhost:8001/products', {
+          params: params
+        })
+
+        this.products = response.data
+        console.log(response.data)
+      } catch (error) {
+        console.error(error)
+      }
     },
     getImage(imageData) {
       try {
@@ -98,7 +112,8 @@ export default {
     axios
       .get('http://localhost:8001/products')
       .then((response) => {
-        this.products = response.data
+        this.allProducts = response.data
+        this.products = this.allProducts
         console.log(response.data)
       })
       .catch((error) => {
@@ -109,6 +124,7 @@ export default {
 </script>
 
 <style scoped>
+
 button {
   background-color: var(--button-green-hover);
   color: white;
@@ -149,6 +165,7 @@ button:hover {
   font-size: 16px;
   text-align: center;
 }
+
 
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {

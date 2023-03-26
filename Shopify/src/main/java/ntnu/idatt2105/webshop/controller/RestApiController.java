@@ -41,6 +41,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a RESTful API controller for managing users, carts, and products.
+ */
 @CrossOrigin()
 @RestController
 public class RestApiController {
@@ -61,6 +64,14 @@ public class RestApiController {
     @Autowired
     private SessionRepository sessionRepository;
 
+    /**
+     * Creates a new user with the provided username, password, and email.
+     *
+     * @param username the username of the new user
+     * @param password the password of the new user
+     * @param email the email address of the new user
+     * @return a response entity with the created user object and a HTTP status code of 201 if successful, or a HTTP status code of 500 if there was an error during the creation process.
+     */
     @ApiOperation(value = "Create a new user", response = User.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully created user"),
@@ -89,9 +100,21 @@ public class RestApiController {
         }
     }
 
+    /**
+     * Retrieves the user details for the authenticated user.
+     *
+     * @param authentication the authentication object containing the user's credentials
+     * @return a response entity with the user details and a HTTP status code of 200 if successful, or a HTTP status code of 404 if the user was not found, or a HTTP status code of 401 if the user is not authenticated.
+     */
     @CrossOrigin
     @GetMapping("/account")
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ApiOperation(value = "Get user details", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved user details"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
     public ResponseEntity<UserDTO> getUser(Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName());
         if (user == null) {
@@ -104,13 +127,29 @@ public class RestApiController {
         }
         else
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
     }
 
 
+
+    /**
+     * Updates the user details for the authenticated user.
+     *
+     * @param userDto the user details to be updated
+     * @param authentication the authentication object containing the user's credentials
+     * @return a response entity with the updated user details and a HTTP status code of 200 if successful, or a HTTP status code of 400 if the old password is incorrect, or a HTTP status code of 401 if the user is not authenticated, or a HTTP status code of 404 if the user was not found.
+     * @throws NoSuchAlgorithmException if there is an error with the password hashing algorithm
+     * @throws InvalidKeySpecException if there is an error with the password hashing algorithm
+     */
     @CrossOrigin
     @PutMapping("/updateAccount")
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ApiOperation(value = "Update user details", response = UserDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully updated user details"),
+            @ApiResponse(code = 400, message = "Incorrect old password"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user = userRepository.findByUsername(authentication.getName());
         if (user == null) {
@@ -128,8 +167,8 @@ public class RestApiController {
             if (newPassword != null && !newPassword.isEmpty()) {
                 // Check if old password is correct
                 String oldPassword = user.getPassword();
-                if (!PasswordHashing.validatePassword(oldPassword, user.getPassword())) {
-                    return ResponseEntity.badRequest().build();
+                if (!PasswordHashing.validatePassword(userDto.getOldPassword(), oldPassword)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
                 // Set the new password
                 user.setPassword(PasswordHashing.generatePasswordHash(newPassword));
@@ -144,14 +183,28 @@ public class RestApiController {
         }
         else
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
     }
 
 
 
+
+    /**
+     * Adds a new product for sale to the marketplace.
+     *
+     * @param briefDescription a brief description of the product
+     * @param fullDescription a detailed description of the product
+     * @param category the category of the product
+     * @param latitude the latitude of the location where the product is being sold
+     * @param longitude the longitude of the location where the product is being sold
+     * @param price the price of the product
+     * @param image the image of the product
+     * @param authentication the authentication object containing the user's credentials
+     * @return a response entity with a success message and a HTTP status code of 200 if successful, or a HTTP status code of 400 if the user was not found or there was an error processing the image, or a HTTP status code of 500 if there was an error selling the product.
+     */
     @ApiOperation(value = "Sell a new product", response = Map.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully sold product"),
+            @ApiResponse(code = 400, message = "User not found or failed to process image"),
             @ApiResponse(code = 500, message = "Failed to sell product")
     })
     @CrossOrigin()
@@ -172,7 +225,6 @@ public class RestApiController {
         }
 
         try {
-
             byte[] imageBytes = image.getBytes();
             Product product = new Product(briefDescription, fullDescription, category, latitude, longitude, price,
                     imageBytes, user);
@@ -181,13 +233,29 @@ public class RestApiController {
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Failed to process image"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Failed to sell product"));
         }
     }
 
 
 
+
+    /**
+     * Adds a product to the authenticated user's cart.
+     *
+     * @param id the ID of the product to be added to the cart
+     * @param authentication the authentication object containing the user's credentials
+     * @return a response entity with a success message and a HTTP status code of 200 if successful, or a HTTP status code of 400 if the user was not found or there was an error adding the product to the cart.
+     */
     @CrossOrigin()
     @PostMapping(value="/addToCart")
+    @ApiOperation(value = "Add product to cart", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully added item to cart"),
+            @ApiResponse(code = 400, message = "User not found or failed to add item to cart")
+    })
     public ResponseEntity<Map<String, String>> addToCart(
             @RequestParam Long id,
             Authentication authentication) {
@@ -197,23 +265,39 @@ public class RestApiController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
         }
 
+        try {
+            Cart cart = cartRepository.findCartByUser(user);
+            Product product = productRepository.findProductById(id);
 
-        Cart cart = cartRepository.findCartByUser(user);
-        Product product = productRepository.findProductById(id);
+            logger.info("Cart before adding product: {}", cart.getId());
+            logger.info("Product to add: {}", product.getId());
 
-        logger.info("Cart before adding product: {}", cart.getId());
-        logger.info("Product to add: {}", product.getId());
+            product.addCart(cart);
+            cart.getProducts().add(product);
+            cartRepository.save(cart);
 
-        product.addCart(cart);
-        cart.getProducts().add(product);
-        cartRepository.save(cart);
-
-        logger.info("Cart after adding product: {}", cart.getProducts().toString());
-        return ResponseEntity.ok(Collections.singletonMap("success", "Item added to cart successfully"));
+            logger.info("Cart after adding product: {}", cart.getProducts().toString());
+            return ResponseEntity.ok(Collections.singletonMap("success", "Item added to cart successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Failed to add item to cart"));
+        }
     }
 
+    /**
+     * Removes a product from the authenticated user's cart.
+     *
+     * @param id the ID of the product to be removed from the cart
+     * @param authentication the authentication object containing the user's credentials
+     * @return a response entity with a success message and a HTTP status code of 200 if successful, or a HTTP status code of 400 if the user was not found or there was an error removing the product from the cart.
+     */
     @CrossOrigin()
     @PostMapping(value="/removeFromCart")
+    @ApiOperation(value = "Remove product from cart", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully removed item from cart"),
+            @ApiResponse(code = 400, message = "User not found or failed to remove item from cart")
+    })
     public ResponseEntity<Map<String, String>> removeFromCart(
             @RequestParam Long id,
             Authentication authentication) {
@@ -223,23 +307,34 @@ public class RestApiController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
         }
 
+        try {
+            Cart cart = cartRepository.findCartByUser(user);
+            Product product = productRepository.findProductById(id);
 
-        Cart cart = cartRepository.findCartByUser(user);
-        Product product = productRepository.findProductById(id);
+            logger.info("Cart before removing product: {}", cart.getId());
+            logger.info("Product to remove: {}", product.getId());
 
-        logger.info("Cart before adding product: {}", cart.getId());
-        logger.info("Product to add: {}", product.getId());
+            product.removeCart(cart);
+            cart.getProducts().remove(product);
+            cartRepository.save(cart);
 
-        product.removeCart(cart);
-        cart.getProducts().remove(product);
-        cartRepository.save(cart);
-
-        logger.info("Cart after adding product: {}", cart.getProducts().toString());
-        return ResponseEntity.ok(Collections.singletonMap("success", "Item removed from cart successfully"));
+            logger.info("Cart after removing product: {}", cart.getProducts().toString());
+            return ResponseEntity.ok(Collections.singletonMap("success", "Item removed from cart successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Failed to remove item from cart"));
+        }
     }
 
 
 
+
+    /**
+     * Returns a list of products that match the specified categories, or all products if no categories are specified.
+     *
+     * @param categories the list of categories to filter products by (optional)
+     * @return a list of product DTOs and a HTTP status code of 200 if successful, or a HTTP status code of 401 if the user is not authorized.
+     */
     @ApiOperation(value = "Get all products", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved products"),
@@ -247,26 +342,35 @@ public class RestApiController {
     })
     @CrossOrigin
     @RequestMapping(value = "/products", method=RequestMethod.GET)
-    public List<ProductDTO> getProducts(){
-            Iterable<Product> products = productRepository.findAll();
-            List<ProductDTO> productDTOS = new ArrayList<>();
-            for (Product product : products) {
-                ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
-                        product.getFullDescription(), product.getCategory(), product.getLatitude(),
-                        product.getLongitude(), product.getPrice(), product.getImage(),
-                        product.getSeller().getUsername());
-                productDTOS.add(productDTO);
-            }
-            logger.info("Product dto being sent: {}", productDTOS);
-            return productDTOS;
+    public List<ProductDTO> getProducts(@RequestParam(required = false, name = "categories") List<String> categories){
+        Iterable<Product> products;
+        if (categories != null && !categories.isEmpty()) {
+            // Filter products by categories
+            products = productRepository.findByCategoryIn(categories);
+        } else {
+            // Return all products
+            products = productRepository.findAll();
+        }
+
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
+                    product.getFullDescription(), product.getCategory(), product.getLatitude(),
+                    product.getLongitude(), product.getPrice(), product.getImage(),
+                    product.getSeller().getUsername());
+            productDTOS.add(productDTO);
+        }
+        logger.info("Product dto being sent: {}", productDTOS);
+        return productDTOS;
     }
 
 
+
     /**
-     * Retrieve the products in the authenticated user's cart.
+     * Returns a list of products in the authenticated user's cart.
      *
      * @param authentication the authentication object for the current request
-     * @return a list of product DTOs
+     * @return a list of product DTOs and a HTTP status code of 200 if successful, or a HTTP status code of 401 if the user is not authorized, or a HTTP status code of 500 if there was an internal server error.
      */
     @ApiOperation(value = "Get the products in the authenticated user's cart", response = List.class)
     @ApiResponses(value = {
@@ -285,8 +389,50 @@ public class RestApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Cart cart = cartRepository.findCartByUser(user);
-        Iterable<Product> products = cart.getProducts();
+        try {
+            Cart cart = cartRepository.findCartByUser(user);
+            Iterable<Product> products = cart.getProducts();
+            List<ProductDTO> productDTOS = new ArrayList<>();
+            for (Product product : products) {
+                ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
+                        product.getFullDescription(), product.getCategory(), product.getLatitude(),
+                        product.getLongitude(), product.getPrice(), product.getImage(),
+                        product.getSeller().getUsername());
+                productDTOS.add(productDTO);
+            }
+            return ResponseEntity.ok(productDTOS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    /**
+     * Returns a list of products listed by the authenticated user.
+     *
+     * @param authentication the authentication object for the current request
+     * @return a list of product DTOs and a HTTP status code of 200 if successful, or a HTTP status code of 401 if the user is not authorized.
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/myListing", method=RequestMethod.GET)
+    @ApiOperation(value = "Get the products listed by the authenticated user", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved products"),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    public ResponseEntity<List<ProductDTO>> getListing(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<Product> products = productRepository.findProductsBySeller(user);
+
         List<ProductDTO> productDTOS = new ArrayList<>();
         for (Product product : products) {
             ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
@@ -295,9 +441,57 @@ public class RestApiController {
                     product.getSeller().getUsername());
             productDTOS.add(productDTO);
         }
+        logger.info("MADE IT TO RESPONSE*!!!!!");
         return ResponseEntity.ok(productDTOS);
     }
 
+
+    /**
+     * Removes a product from the authenticated user's listing.
+     *
+     * @param id the ID of the product to remove
+     * @param authentication the authentication object for the current request
+     * @return a success message and a HTTP status code of 200 if successful, or an error message and a HTTP status code of 400 if the user is not authorized or the product cannot be found.
+     */
+    @ApiOperation(value = "Remove a product from the authenticated user's listing", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Item removed from listing successfully"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    @CrossOrigin()
+    @PostMapping(value="/removeFromListing")
+    public ResponseEntity<Map<String, String>> removeFromListing(
+            @RequestParam Long id,
+            Authentication authentication) {
+
+        User user = userRepository.findByUsername(authentication.getName());
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "User not found"));
+        }
+
+        Product product = productRepository.findProductById(id);
+        if (product == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Product not found"));
+        }
+        // check if the product belongs to the user
+        if (!product.getSeller().getUsername().equals(user.getUsername())) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "You cannot remove this product"));
+        }
+        // remove the product from the database
+        productRepository.delete(product);
+
+        return ResponseEntity.ok(Collections.singletonMap("success", "Item removed from listing successfully"));
+    }
+
+
+    /**
+     * Generates a token for user authentication.
+     *
+     * @param username the username of the user to authenticate
+     * @param password the password of the user to authenticate
+     * @return a token and a HTTP status code of 201 if successful, or an error message and a HTTP status code of 401 if the user is not authorized or the password is incorrect.
+     * @throws Exception if an error occurs while generating the token
+     */
     @ApiOperation(value = "Generate a token for user authentication", response = Map.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully generated token"),
@@ -323,13 +517,18 @@ public class RestApiController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied, wrong credentials...."));
     }
 
+
     /**
      * Generates a JWT token for the user with the specified user ID.
      *
      * @param userId the ID of the user to generate the token for
      * @return the JWT token string
      */
-
+    @ApiOperation(value = "Generate JWT token for user authentication", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully generated token"),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     public String generateToken(String userId) {
         // Generate the key for signing the token
         Key key = Keys.hmacShaKeyFor(keyStr.getBytes(StandardCharsets.UTF_8));
@@ -356,6 +555,14 @@ public class RestApiController {
                 .compact();
     }
 
+
+    /**
+     * Log in a user.
+     *
+     * @param username the username of the user to log in
+     * @param password the password of the user to log in
+     * @return the user object and a HTTP status code of 201 if successful, or a HTTP status code of 500 if the login fails
+     */
     @ApiOperation(value = "Log in a user", response = User.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully logged in"),
@@ -423,6 +630,7 @@ public class RestApiController {
 
         return ResponseEntity.ok(message);
     }
+
 
 
 }

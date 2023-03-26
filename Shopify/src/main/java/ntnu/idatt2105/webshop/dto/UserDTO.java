@@ -10,6 +10,17 @@ public class UserDTO {
     private String username;
 
     private String newPassword;
+
+    private String oldPassword;
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
     // Constructors
     public UserDTO() {}
 

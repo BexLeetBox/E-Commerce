@@ -71,13 +71,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/products").permitAll()
-                .antMatchers(HttpMethod.POST, "/sell-item").permitAll()
-                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
-                .antMatchers(HttpMethod.POST, "/addToCart").permitAll()
-                .antMatchers(HttpMethod.POST, "/removeFromCart").permitAll()
+                .antMatchers(HttpMethod.POST, "/sell-item").authenticated()
+                .antMatchers(HttpMethod.POST, "/addToCart").authenticated()
+                .antMatchers(HttpMethod.POST, "/removeFromCart").authenticated()
                 .antMatchers(HttpMethod.GET, "/myCart").permitAll()
-                .antMatchers(HttpMethod.GET, "/account").permitAll()
-                .antMatchers(HttpMethod.PUT, "/updateAccount").permitAll()
+                .antMatchers(HttpMethod.GET, "/account").authenticated()
+                .antMatchers(HttpMethod.PUT, "/updateAccount").authenticated()
+                .antMatchers(HttpMethod.GET, "/products/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/myListing").permitAll()
+                .antMatchers(HttpMethod.POST, "/removeFromListing").permitAll()
                 .anyRequest().authenticated();
     }
 

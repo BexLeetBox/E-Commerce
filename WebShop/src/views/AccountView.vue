@@ -28,24 +28,37 @@
         <input type="text" id="address" name="address" v-model="address" required />
       </div>
       <button type="submit">Update Account</button>
+      <p id="update-msg" v-if="updateMessage">{{ updateMessage }}</p>
     </form>
 
     <form class="account-form" @submit.prevent="updateAccount">
-    <h2>Change Password</h2>
+      <h2>Change Password (Not functional yet)</h2>
 
       <div class="form-group">
         <label for="old-password">Old password:</label>
-        <input type="password" id="old-password" name="old-password" v-model="oldPassword" required />
+        <input
+          type="password"
+          id="old-password"
+          name="old-password"
+          v-model="oldPassword"
+          required
+        />
       </div>
       <div class="form-group">
         <label for="new-password">New password:</label>
-        <input type="password" id="new-password" name="new-password" v-model="newPassword" required />
+        <input
+          type="password"
+          id="new-password"
+          name="new-password"
+          v-model="newPassword"
+          required
+        />
       </div>
       <button type="submit">Change password</button>
     </form>
     <div id="logoutDiv">
-    <button type="button" @click="logOut" style="margin: 10px;">Log out</button>
-  </div>
+      <button type="button" @click="logOut" style="margin: 10px">Log out</button>
+    </div>
   </div>
 </template>
 
@@ -65,7 +78,8 @@ export default {
       address: '',
       oldPassword: '',
       newPassword: '',
-      config: {},
+      updateMessage: '',
+      config: {}
     }
   },
   methods: {
@@ -90,50 +104,59 @@ export default {
         .put('http://localhost:8001/updateAccount', data, config)
         .then((response) => {
           console.log(response.data)
+          this.updateMessage = 'Account updated'
+
+      // clear updateMessage after 3 seconds
+      setTimeout(() => {
+        this.updateMessage = ''
+      }, 3000)
         })
         .catch((error) => {
           console.error(error)
         })
+
+      
     },
-   async logOut(){
-      console.log("trying to logout")
+    async logOut() {
+      console.log('trying to logout')
       localStorage.removeItem('isLoggedIn')
-      localStorage.removeItem('token');
-        // Clear authentication state
-        // Update button text to "Log in"
-        // Redirect to login page
-        
-        window.location.reload()
-        await router.push('/login')
-      }
+      localStorage.removeItem('token')
+      // Clear authentication state
+      // Update button text to "Log in"
+      // Redirect to login page
+
+      window.location.reload()
+      await router.push('/login')
+    }
   },
-  mounted(){
+  mounted() {
     const config = {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
       }
-      this.config = config
+    }
+    this.config = config
     // Fetch the account data from the backend and populate the form fields with the data
-    axios.get('http://localhost:8001/account', this.config)
-      .then(response => {
-        const data = response.data;
-        this.firstName = data.firstName;
-        this.lastName = data.lastName;
-        this.email = data.email;
-        this.phoneNumber = data.phoneNumber;
-        this.address = data.address;
-        this.username = data.username;
+    axios
+      .get('http://localhost:8001/account', this.config)
+      .then((response) => {
+        const data = response.data
+        this.firstName = data.firstName
+        this.lastName = data.lastName
+        this.email = data.email
+        this.phoneNumber = data.phoneNumber
+        this.address = data.address
+        this.username = data.username
       })
-      .catch(error => {
-        console.error(error);
-      });
+      .catch((error) => {
+        console.error(error)
+      })
   }
 }
 </script>
 
-<style>
-#logoutDiv{
+<style scoped>
+#logoutDiv {
   margin-top: 5px;
   background-color: #333333;
   width: 100vw;
