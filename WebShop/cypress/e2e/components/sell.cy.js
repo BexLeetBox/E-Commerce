@@ -1,3 +1,4 @@
+import 'cypress-file-upload';
 describe('Sell Item Page', () => {
     beforeEach(() => {
       // Log in the user before each test
@@ -13,12 +14,7 @@ describe('Sell Item Page', () => {
       cy.get('#latitude').type('59.9139')
       cy.get('#longitude').type('10.7522')
       cy.get('#price').type('100')
-      cy.fixture('example.jpg').then((fileContent) => {
-        cy.get('#image').upload(
-          { fileContent, fileName: 'example.jpg', mimeType: 'image/jpeg' },
-          { subjectType: 'input' }
-        )
-      })
+      cy.get('#image').attachFile('example.jpg', { subjectType: 'input' });
   
       // Submit the form
       cy.get('#product-form').submit()

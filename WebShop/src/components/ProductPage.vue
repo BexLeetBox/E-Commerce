@@ -187,7 +187,10 @@ button:hover {
   text-align: center;
 }
 
-
+.sidebar li {
+  display: inline-block;
+  margin-right: 10px;
+}
 /* Tablet and desktop styles */
 @media screen and (min-width: 768px) {
   button {
@@ -199,19 +202,16 @@ button:hover {
     list-style: none;
   }
 
-  .sidebar li {
-    display: inline-block;
-    margin-right: 10px;
-  }
+  
 
   .sidebar input[type='checkbox'] {
     margin-right: 5px;
   }
   .product-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, .5fr);
     gap: 20px;
-    justify-items: center;
+    justify-items: start;
   }
   .product-item {
     display: flex;
@@ -224,8 +224,8 @@ button:hover {
     box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.1);
   }
   .product-image {
-    width: 300px;
-    height: 250px;
+    width: 250px;
+    height: 220px;
   }
   .product-description {
     margin-top: 10px;

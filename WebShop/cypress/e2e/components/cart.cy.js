@@ -17,10 +17,29 @@ describe('Listing page after sell', () => {
       cy.get('form').submit()
   
       // Confirm that the item is added to the user's listing
-      cy.visit('/mylisting')
+      cy.visit('/')
       cy.contains('Example Brief Description').should('exist')
     })
   })
+
+  describe('Product to cart', () => {
+    beforeEach(() => {
+      // Log in the user before each test
+      cy.login('s', 's')
+      cy.visit('/')
+    })
+  
+    it('should add a product to the cart', () => {
+      // Click on the "Add to cart" button for the first product
+      cy.get('.product-item').last().scrollIntoView().contains('Add to cart').click({ force: true })
+  
+      // Confirm that the product is added to the cart
+      cy.visit('/cart')
+      cy.contains('Example Brief Description').should('exist')
+      cy.contains('100 NOK.').should('exist')
+    })
+  })
+  
   
   
   

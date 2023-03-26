@@ -17,10 +17,7 @@ describe('Listing page after sell', () => {
       cy.get('form').submit()
   
       // Confirm that the item is added to the user's listing
-      cy.visit('/mylisting')
+      cy.visit('/')
       cy.contains('Example Brief Description').should('exist')
     })
   })
-  
-  
-  

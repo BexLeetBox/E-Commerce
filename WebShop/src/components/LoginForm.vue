@@ -41,11 +41,13 @@ export default {
           }, 3000)
         }
       } catch (exception) {
+        console.error(exception)
         gotResponse = false;
         this.updateMessage = 'User not found or password is wrong'
         setTimeout(() => {
           this.updateMessage = ''
         }, 3000)
+        
       }
 
       console.log(gotResponse)
