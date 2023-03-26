@@ -14,6 +14,7 @@
       </li>
     </ul>
   </div>
+  <Map info="products"></Map>
   <div class="product-container">
     <div v-for="product in products" :key="product.id" class="product-item">
       <img :src="getImage(product.image)" :alt="product.name" class="product-image" />
@@ -33,8 +34,12 @@
 
 <script>
 import axios from 'axios'
+import Map from '../components/MapProducts.vue'
 
 export default {
+  components:{
+    Map
+  },
   data() {
     return {
       products: [],

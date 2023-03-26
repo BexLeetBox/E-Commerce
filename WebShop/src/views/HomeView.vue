@@ -6,7 +6,6 @@ import Map from '../components/MapProducts.vue';
 <template>
   <main>
     <TheWelcome />
-    <Map></Map>
   </main>
 </template>
 <style scoped>

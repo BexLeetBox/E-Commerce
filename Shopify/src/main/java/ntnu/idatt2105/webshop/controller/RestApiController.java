@@ -7,12 +7,15 @@ import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import ntnu.idatt2105.webshop.components.SessionRepository;
 import ntnu.idatt2105.webshop.dto.ProductDTO;
 import ntnu.idatt2105.webshop.dto.UserDTO;
 import ntnu.idatt2105.webshop.model.Cart;
+import ntnu.idatt2105.webshop.model.Message;
 import ntnu.idatt2105.webshop.model.Product;
 import ntnu.idatt2105.webshop.model.User;
 import ntnu.idatt2105.webshop.repositories.CartRepository;
+import ntnu.idatt2105.webshop.repositories.MessageRepository;
 import ntnu.idatt2105.webshop.repositories.ProductRepository;
 import ntnu.idatt2105.webshop.repositories.UserRepository;
 import ntnu.idatt2105.webshop.util.PasswordHashing;
@@ -26,12 +29,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +57,12 @@ public class RestApiController {
     private CartRepository cartRepository;
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
 
     /**
      * Creates a new user with the provided username, password, and email.
@@ -582,6 +594,41 @@ public class RestApiController {
             logger.error("Error serializing response body", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @CrossOrigin
+    @PostMapping("/messages")
+    public ResponseEntity<Message> sendMessage(
+            @RequestParam Long senderId,
+            @RequestParam Long receiverId,
+            @RequestBody String content) {
+
+        // Look up sender and receiver by ID in the database
+        User sender = userRepository.findById(senderId).orElseThrow();
+        User receiver = userRepository.findById(receiverId).orElseThrow();
+
+        // Create a new message object and save it to the database
+        Message message = new Message();
+        message.setSender(sender);
+        message.setReceiver(receiver);
+        message.setContent(content);
+        message.setCreatedAt(LocalDateTime.now());
+        messageRepository.save(message);
+
+        // Send the message over WebSocket to the recipient
+        String payload = sender.getUsername() + ": " + content;
+        TextMessage textMessage = new TextMessage(payload);
+        try {
+            WebSocketSession recipientSession = sessionRepository.getSession(receiver.getId());
+            if (recipientSession != null && recipientSession.isOpen()) {
+                recipientSession.sendMessage(textMessage);
+            }
+        } catch (IOException e) {
+            logger.error("Error sending WebSocket message", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(message);
     }
 
 
