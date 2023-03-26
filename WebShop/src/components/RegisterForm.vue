@@ -1,7 +1,7 @@
 <template>
   <div id="inputs">
     <h1 id="header">Register form</h1>
-    <RegistrationFields class="input" label="Email" type="email" v-model="user.email"/>
+    <RegistrationFields class="input" label="Email" type="email" v-model="user.email" />
     <div id="username">
       <label>Username</label>
       <input
@@ -25,9 +25,7 @@
     <button id="submitRegistartion" v-on:click="handleRegistration" data-test="button">
       Register
     </button>
-    <label data-test="registrationStatus" v-if="registrationStatus">
-      {{ this.registrationStatus }}
-    </label>
+    <p id="update-msg" v-if="updateMessage">{{ updateMessage }}</p>
   </div>
 </template>
 
@@ -45,12 +43,46 @@ export default {
         id: uuidv4()
       }
       if (!(user.username === '' || user.password === '')) {
-        const response = await ApiService.postUser(user)
-        console.log(response)
-        if (response.username === user.username && response.password === user.password) {
-          this.registrationStatus = 'Succsefully registered'
-        } else this.registrationStatus = 'User already registered'
-      } else this.registrationStatus = 'Please fill out the registration'
+        try {
+          // Attempt to create the user
+          const response = await ApiService.postUser(user)
+          console.log(response)
+
+          // Set updateMessage to "Successfully registered!"
+          this.updateMessage = 'Successfully registered!'
+
+          // Clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
+        } catch (error) {
+          // Handle errors from ApiService.postUser()
+          console.error(error)
+
+          if (error.response && error.response.status === 500) {
+            // User is already registered
+            this.updateMessage = 'User already registered'
+
+            // Clear updateMessage after 3 seconds
+            setTimeout(() => {
+              this.updateMessage = ''
+            }, 3000)
+          } else {
+            // Other error occurred
+            this.updateMessage = 'An error occurred while registering'
+
+            // Clear updateMessage after 3 seconds
+            setTimeout(() => {
+              this.updateMessage = ''
+            }, 3000)
+          }
+        }
+      } else {
+        this.updateMessage = 'Please fill out the registration'
+        setTimeout(() => {
+          this.updateMessage = ''
+        }, 3000)
+      }
     }
   },
   data() {
@@ -65,7 +97,8 @@ export default {
         username: '',
         password: ''
       },
-      registrationStatus: ''
+      registrationStatus: '',
+      updateMessage: ''
     }
   }
 }

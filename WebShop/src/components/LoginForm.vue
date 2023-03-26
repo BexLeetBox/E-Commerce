@@ -12,6 +12,7 @@
       <input data-test="passwordInput" type="password" v-model="user.password" />
     </div>
     <button data-test="button" v-on:click="handleClickSignin">Sign in</button>
+    <p id="update-msg" v-if="updateMessage">{{ updateMessage }}</p>
     <div id="loginStatus">
       <h3>{{ this.loginStatus }}</h3>
       <router-link to="/register"><p data-test="loginStatus"></p></router-link>
@@ -32,14 +33,25 @@ export default {
       let response
       try {
         response = await store.dispatch('fetchUserName', this.user)
-        gotResponse = true
+        gotResponse = true;
+        if (typeof response === 'undefined') {
+          this.updateMessage = 'User not found or password is wrong'
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
+        }
       } catch (exception) {
-        gotResponse = false
+        gotResponse = false;
+        this.updateMessage = 'User not found or password is wrong'
+        setTimeout(() => {
+          this.updateMessage = ''
+        }, 3000)
       }
+
       console.log(gotResponse)
       console.log(response)
       const token = response.token
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', token)
       if (gotResponse === false) {
         this.loginStatus = 'Wrong credentials'
         store.commit('SET_LOGINSTATUS', false)
@@ -47,7 +59,7 @@ export default {
       } else {
         this.loginStatus = 'Logged in'
         store.commit('SET_LOGINSTATUS', true)
-        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('isLoggedIn', true)
         await router.push('/')
         window.location.reload()
         console.log(store.getters.getLoginStatus)
@@ -61,7 +73,8 @@ export default {
         username: '',
         password: ''
       },
-      loginStatus: ''
+      loginStatus: '',
+      updateMessage: '',
     }
   }
 }

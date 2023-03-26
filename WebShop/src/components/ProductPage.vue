@@ -25,7 +25,8 @@
         <p class="product-description">{{ product.sellerName }}</p>
         <label for="price">Price:</label>
         <p class="product-price">{{ product.price + ' NOK.' }}</p>
-        <button @click="addToCart(product)">Add to cart</button>
+        <button @click="addToCart(product, product.id)">Add to cart</button>
+        <p id="update-msg" v-if="selectedItem == product.id">{{ updateMessage }}</p>
       </div>
     </div>
   </div>
@@ -42,6 +43,7 @@ export default {
   data() {
     return {
       products: [],
+      updateMessage: '',
       categories: [
         { id: 1, name: 'Furniture', selected: false },
         { id: 2, name: 'Clothing', selected: false },
@@ -54,11 +56,12 @@ export default {
       selectedCategories: [],
       config: {},
       id: {},
-      allProducts: []
+      allProducts: [],
+      selectedItem: 0,
     }
   },
   methods: {
-    async addToCart(product) {
+    async addToCart(product, productId) {
       this.config = {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -67,13 +70,27 @@ export default {
       const id = new FormData()
       id.append('id', product.id)
 
+      this.selectedItem = productId;
+
       try {
         console.log(product.id)
         const response = await axios.post('http://localhost:8001/addToCart', id, this.config)
 
+        this.updateMessage = 'Added to cart'
+
+          // clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
         console.log('token' + this.$store.getters.getToken)
         console.log(response.data)
       } catch (error) {
+        this.updateMessage = 'Could not add to cart'
+
+          // clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
         console.error(error)
       }
     },
