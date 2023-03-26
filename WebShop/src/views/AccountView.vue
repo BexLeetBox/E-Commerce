@@ -155,7 +155,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #logoutDiv {
   margin-top: 5px;
   background-color: #333333;

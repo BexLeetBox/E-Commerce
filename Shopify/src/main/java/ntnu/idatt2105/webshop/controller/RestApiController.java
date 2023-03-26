@@ -296,7 +296,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/myListing", method=RequestMethod.GET)
-    public ResponseEntity<List<Product>> getListing(Authentication authentication) {
+    public ResponseEntity<List<ProductDTO>> getListing(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -308,7 +308,16 @@ public class RestApiController {
 
         List<Product> products = productRepository.findProductsBySeller(user);
 
-        return ResponseEntity.ok(products);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO(product.getId(), product.getBriefDescription(),
+                    product.getFullDescription(), product.getCategory(), product.getLatitude(),
+                    product.getLongitude(), product.getPrice(), product.getImage(),
+                    product.getSeller().getUsername());
+            productDTOS.add(productDTO);
+        }
+        logger.info("MADE IT TO RESPONS*!!!!!");
+        return ResponseEntity.ok(productDTOS);
     }
 
     @CrossOrigin()

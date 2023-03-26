@@ -13,7 +13,7 @@ public class Product {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String briefDescription;
-    @Column(name = "full_description", length = 10000)
+    @Column(columnDefinition="TEXT")
     private String fullDescription;
     private String category;
     private double latitude, longitude;
