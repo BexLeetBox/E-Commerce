@@ -22,14 +22,15 @@
         </select><br /><br />
         
         <label for="latitude">Latitude:</label>
-        <input type="text" id="latitude" name="latitude" /><br /><br />
+        <input type="number" id="latitude" name="latitude" /><br /><br />
         <label for="longitude">Longitude:</label>
-        <input type="text" id="longitude" name="longitude" /><br /><br />
+        <input type="number" id="longitude" name="longitude" /><br /><br />
         <label for="price">Price:</label>
         <input type="text" id="price" name="price" /><br /><br />
         <label for="image">Image:</label>
         <input type="file" id="image" name="image" @change="onFileChange" /><br /><br />
         <input type="submit" value="Submit" />
+        <p id="update-msg" v-if="updateMessage">{{ updateMessage }}</p>
       </form>
     </div>
   </main>
@@ -48,7 +49,8 @@ export default {
       imageFile: null,
       description: '',
       price: '',
-      config: {}
+      config: {},
+      updateMessage: '',
     }
   },
   methods: {
@@ -75,9 +77,21 @@ export default {
       console.log(localStorage.getItem('token'))
       try {
         const response = await axios.post('http://localhost:8001/sell-item', formData, this.config)
+        this.updateMessage = 'Item is now on sale'
+
+          // clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
         console.log('token' + this.$store.getters.getToken)
         console.log(response.data)
       } catch (error) {
+        this.updateMessage = 'Fill in all forms appropriately'
+
+          // clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
         console.error(error)
       }
     }

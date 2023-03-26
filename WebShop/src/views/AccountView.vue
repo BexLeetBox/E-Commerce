@@ -32,7 +32,7 @@
     </form>
 
     <form class="account-form" @submit.prevent="updateAccount">
-      <h2>Change Password (Not functional yet)</h2>
+      <h2>Change Password</h2>
 
       <div class="form-group">
         <label for="old-password">Old password:</label>
@@ -55,6 +55,7 @@
         />
       </div>
       <button type="submit">Change password</button>
+      <p id="update-msg" v-if="updateMessage">{{ updateMessage }}</p>
     </form>
     <div id="logoutDiv">
       <button type="button" @click="logOut" style="margin: 10px">Log out</button>
@@ -106,16 +107,18 @@ export default {
           console.log(response.data)
           this.updateMessage = 'Account updated'
 
-      // clear updateMessage after 3 seconds
-      setTimeout(() => {
-        this.updateMessage = ''
-      }, 3000)
+          // clear updateMessage after 3 seconds
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
         })
         .catch((error) => {
+          this.updateMessage = 'Something went wrong, try to fill all fields correctly'
+          setTimeout(() => {
+            this.updateMessage = ''
+          }, 3000)
           console.error(error)
         })
-
-      
     },
     async logOut() {
       console.log('trying to logout')
@@ -125,8 +128,9 @@ export default {
       // Update button text to "Log in"
       // Redirect to login page
 
-      window.location.reload()
+      
       await router.push('/login')
+      await window.location.reload()
     }
   },
   mounted() {
