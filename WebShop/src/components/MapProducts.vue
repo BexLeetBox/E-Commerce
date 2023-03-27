@@ -61,5 +61,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+.vue-map-container{
+  display: flex;
+  justify-content: center;
 
+}
+</style>
 
